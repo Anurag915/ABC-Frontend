@@ -1,6 +1,8 @@
 import { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";  // Import useNavigate
+const apiUrl = import.meta.env.VITE_API_URL;
+
 
 const Login = () => {
   const [form, setForm] = useState({ email: "", password: "" });
@@ -13,7 +15,7 @@ const Login = () => {
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
-      const res = await axios.post("http://localhost:5000/api/auth/login", form);
+      const res = await axios.post(`${apiUrl}/api/auth/login`, form);
       localStorage.setItem("token", res.data.token); // Save JWT token
       alert("Login successful!");
       navigate("/"); // Redirect to home page

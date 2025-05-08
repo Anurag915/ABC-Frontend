@@ -3,12 +3,14 @@ import { useNavigate } from "react-router-dom";
 import { FaUserShield } from "react-icons/fa";
 import Navbar from "./Navbar";
 import Footer from "./Footer";
+const apiUrl = import.meta.env.VITE_API_URL;
+
 function HomePage() {
   const [groups, setGroups] = useState([]);
   const navigate = useNavigate();
 
   useEffect(() => {
-    fetch("http://localhost:5000/api/groups")
+    fetch(`${apiUrl}/api/groups`)
       .then((res) => res.json())
       .then((data) => setGroups(data))
       .catch((err) => console.error("Error fetching groups:", err));

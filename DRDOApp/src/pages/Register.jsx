@@ -1,89 +1,9 @@
-// import { useState } from "react";
-// import axios from "axios";
-// import { useNavigate } from "react-router-dom";  // Import useNavigate
-
-// const Register = () => {
-//   const [form, setForm] = useState({
-//     name: "",
-//     email: "",
-//     password: "",
-//     role: "employee",
-//   });
-//   const navigate = useNavigate();  // Initialize the navigate function
-
-//   const handleChange = (e) => {
-//     setForm({ ...form, [e.target.name]: e.target.value });
-//   };
-
-//   const handleRegister = async (e) => {
-//     e.preventDefault();
-//     try {
-//       const res = await axios.post("http://localhost:5000/api/auth/register", form);
-//       alert("Registration successful! Please login.");
-//       console.log("navigating");
-//       navigate("/login");  // Redirect to login page after successful registration
-//     } catch (err) {
-//       alert(err.response?.data?.message || "Registration failed.");
-//     }
-//   };
-
-//   return (
-//     <div className="max-w-md mx-auto p-6 mt-10 border rounded shadow">
-//       <h2 className="text-2xl font-semibold mb-4">Register</h2>
-//       <form onSubmit={handleRegister} className="space-y-4">
-//         <input
-//           type="text"
-//           name="name"
-//           placeholder="Name"
-//           className="w-full p-2 border rounded"
-//           value={form.name}
-//           onChange={handleChange}
-//           required
-//         />
-//         <input
-//           type="email"
-//           name="email"
-//           placeholder="Email"
-//           className="w-full p-2 border rounded"
-//           value={form.email}
-//           onChange={handleChange}
-//           required
-//         />
-//         <input
-//           type="password"
-//           name="password"
-//           placeholder="Password"
-//           className="w-full p-2 border rounded"
-//           value={form.password}
-//           onChange={handleChange}
-//           required
-//         />
-//         <select
-//           name="role"
-//           className="w-full p-2 border rounded"
-//           value={form.role}
-//           onChange={handleChange}
-//         >
-//           <option value="employee">Employee</option>
-//           <option value="admin">Admin</option>
-//         </select>
-//         <button
-//           type="submit"
-//           className="w-full bg-blue-600 text-white p-2 rounded hover:bg-blue-700"
-//         >
-//           Register
-//         </button>
-//       </form>
-//     </div>
-//   );
-// };
-
-// export default Register;
 
 
 import { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";  // Import useNavigate
+const apiUrl = import.meta.env.VITE_API_URL;
 
 const Register = () => {
   const [form, setForm] = useState({
@@ -101,7 +21,7 @@ const Register = () => {
   const handleRegister = async (e) => {
     e.preventDefault();
     try {
-      const res = await axios.post("http://localhost:5000/api/auth/register", form);
+      const res = await axios.post(`${apiUrl}/api/auth/register`, form);
       alert("Registration successful! Please login.");
       navigate("/login");  // Redirect to login page after successful registration
     } catch (err) {
