@@ -36,11 +36,31 @@ const GroupDetails = () => {
       .then((res) => setGroup(res.data))
       .catch((err) => console.error("Error fetching group details", err));
   }, [id]);
-useEffect(() => {
-  const role = window.localStorage.getItem("role") || "guest";
-  setUser({ role });
-  setIsAuthorized(role === "admin");
-}, []);
+
+  const handleDeleteDocument = async (docId, type) => {
+    if (window.confirm("Are you sure you want to delete this document?")) {
+      try {
+        const token = window.localStorage.getItem("token");
+        await axios.delete(
+          `${apiUrl}/api/groups/${id}/delete-document/${docId}?type=${type}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+            data: { type },
+          }
+        );
+        alert("Document deleted successfully!");
+        setGroup((prevGroup) => ({
+          ...prevGroup,
+          [type]: prevGroup[type].filter((doc) => doc._id !== docId),
+        }));
+      } catch (err) {
+        console.error("Delete document error:", err);
+        alert("Error deleting document");
+      }
+    }
+  };
 
   const handleDelete = async () => {
     if (window.confirm("Are you sure you want to delete this group?")) {
@@ -88,7 +108,7 @@ useEffect(() => {
         }
       );
       alert("Upload successful!");
-      setGroup(res.data.group); // Refresh group
+      setGroup(res.data.group);
       setUploadData({ type: "project", name: "", description: "", file: null });
     } catch (err) {
       console.error("Upload error:", err);
@@ -96,181 +116,174 @@ useEffect(() => {
     }
   };
 
-  const renderFileListSection = (title, items, emptyText) => (
-    <section className="mt-10">
-      <h2 className="text-2xl font-bold text-gray-800 mb-4">{title}</h2>
+  const renderFileListSection = (title, items, emptyText, type) => (
+    <section className="mt-16 text-center">
+      <h2 className="text-3xl font-semibold text-blue-700 mb-6 border-b pb-2 inline-block border-blue-400">
+        {title}
+      </h2>
       {items?.length > 0 ? (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8 mt-8">
           {items.map((item) => (
             <div
               key={item._id || item.name}
-              className="bg-white border border-gray-200 rounded-2xl shadow-md p-5"
+              className="bg-gradient-to-tr from-white via-slate-50 to-teal-50 rounded-xl border border-gray-200 shadow-lg hover:shadow-xl transition-all duration-300 p-6"
             >
-              <h3 className="text-xl font-semibold text-blue-900 mb-2">
+              <h3 className="text-xl font-bold text-blue-800 mb-2">
                 {item.name}
               </h3>
-              <p className="text-gray-600 mb-4 text-sm">
+              <p className="text-sm text-gray-600 mb-3">
                 {item.description || "No description provided"}
               </p>
               <a
                 href={`${apiUrl}${item.fileUrl}`}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-block text-sm font-medium bg-gradient-to-r from-indigo-600 to-purple-600 text-white px-4 py-2 rounded-md shadow hover:opacity-90 transition"
+                className="block text-center bg-blue-600 text-white px-4 py-2 rounded-md font-medium shadow hover:opacity-90"
               >
-                View Uploaded Document
+                View Document
               </a>
+              {isAuthorized && (
+                <button
+                  onClick={() => handleDeleteDocument(item._id, type)}
+                  className="mt-4 w-full bg-red-500 text-white py-2 px-4 rounded-lg hover:bg-red-600 transition"
+                >
+                  Delete
+                </button>
+              )}
             </div>
           ))}
         </div>
       ) : (
-        <p className="text-gray-500 italic">{emptyText}</p>
+        <p className="text-gray-500 italic mt-4">{emptyText}</p>
       )}
     </section>
   );
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white flex flex-col">
-      <main className="flex-1 px-6 py-10 max-w-6xl mx-auto">
+    <div className="min-h-screen bg-gradient-to-b from-white to-blue-50">
+      <main className="max-w-7xl mx-auto px-6 py-12">
         {group ? (
-          <div className="bg-white shadow-xl rounded-2xl p-8">
-            <header className="border-b pb-6 mb-6">
-              <h1 className="text-4xl font-extrabold text-blue-900 mb-2">
+          <div className="bg-white rounded-2xl shadow-xl p-10">
+            <header className="mb-10 text-center">
+              <h1 className="text-4xl font-bold text-blue-800 mb-3">
                 {group.name}
               </h1>
-              <p className="text-gray-700 text-lg">{group.description}</p>
+              <p className="text-lg text-gray-600 leading-relaxed">
+                {group.description}
+              </p>
             </header>
-
-            {group.employees?.length > 0 && (
-              <section className="mt-10">
-                <h2 className="text-2xl font-bold text-gray-800 mb-4">
-                  Employees
-                </h2>
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                  {group.employees.map((emp) => (
-                    <div
-                      key={emp._id || emp.email}
-                      className="bg-white border border-gray-200 rounded-xl shadow p-5"
-                    >
-                      <h3 className="text-lg font-semibold text-blue-800 mb-2">
-                        {emp.name || "No Name Available"}
-                      </h3>
-                      <p className="text-gray-600">
-                        {emp.email || "No Email Available"}
-                      </p>
-                    </div>
-                  ))}
-                </div>
-              </section>
-            )}
 
             {renderFileListSection(
               "Projects",
               group.projects,
-              "No projects listed"
+              "No projects listed",
+              "projects"
             )}
             {renderFileListSection(
               "Technologies Developed",
               group.technologies,
-              "No technologies listed"
+              "No technologies listed",
+              "technologies"
             )}
             {renderFileListSection(
               "Patents",
               group.patents,
-              "No patents listed"
+              "No patents listed",
+              "patents"
             )}
             {renderFileListSection(
               "Publications",
               group.publications,
-              "No publications listed"
+              "No publications listed",
+              "publications"
             )}
             {renderFileListSection(
               "Courses Conducted",
               group.courses,
-              "No courses listed"
+              "No courses listed",
+              "courses"
             )}
 
             {isAuthorized && (
-              <>
-                {/* Upload Form */}
-                <section className="mt-10 border-t pt-8">
-                  <h2 className="text-2xl font-bold text-gray-800 mb-4">
-                    Upload Document
-                  </h2>
-                  <form
-                    onSubmit={handleUploadSubmit}
-                    className="grid gap-4 max-w-2xl"
+              <section className="mt-24 text-center">
+                <h2 className="text-3xl font-semibold text-blue-700 mb-6">
+                  Upload New Document
+                </h2>
+
+                <form
+                  onSubmit={handleUploadSubmit}
+                  className="bg-white p-8 rounded-xl shadow-lg space-y-4 max-w-xl mx-auto border border-gray-200"
+                >
+                  <select
+                    name="type"
+                    value={uploadData.type}
+                    onChange={handleUploadChange}
+                    className="w-full p-2 border border-gray-300 rounded"
                   >
-                    <select
-                      name="type"
-                      value={uploadData.type}
-                      onChange={handleUploadChange}
-                      className="p-2 border rounded"
-                    >
-                      <option value="project">Project</option>
-                      <option value="patent">Patent</option>
-                      <option value="technology">Technology</option>
-                      <option value="publication">Publication</option>
-                      <option value="course">Course</option>
-                    </select>
+                    <option value="project">Project</option>
+                    <option value="patent">Patent</option>
+                    <option value="technology">Technology</option>
+                    <option value="publication">Publication</option>
+                    <option value="course">Course</option>
+                  </select>
 
-                    <input
-                      type="text"
-                      name="name"
-                      placeholder="Name"
-                      value={uploadData.name}
-                      onChange={handleUploadChange}
-                      className="p-2 border rounded"
-                      required
-                    />
+                  <input
+                    type="text"
+                    name="name"
+                    placeholder="Name"
+                    value={uploadData.name}
+                    onChange={handleUploadChange}
+                    className="w-full p-2 border border-gray-300 rounded"
+                    required
+                  />
 
-                    <textarea
-                      name="description"
-                      placeholder="Description"
-                      value={uploadData.description}
-                      onChange={handleUploadChange}
-                      className="p-2 border rounded"
-                    />
+                  <textarea
+                    name="description"
+                    placeholder="Description"
+                    value={uploadData.description}
+                    onChange={handleUploadChange}
+                    className="w-full p-2 border border-gray-300 rounded"
+                  />
 
-                    <input
-                      type="file"
-                      name="file"
-                      onChange={handleUploadChange}
-                      className="p-2"
-                      required
-                    />
+                  <input
+                    type="file"
+                    name="file"
+                    onChange={handleUploadChange}
+                    className="w-full p-2 border border-gray-300 rounded"
+                    required
+                  />
 
-                    <button
-                      type="submit"
-                      className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 transition"
-                    >
-                      Upload
-                    </button>
-                  </form>
-                </section>
+                  <button
+                    type="submit"
+                    className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 rounded transition"
+                  >
+                    Upload Document
+                  </button>
+                </form>
+              </section>
+            )}
 
-                {/* Edit/Delete Buttons */}
-                {isAuthorized && (
-                  <div className="mt-12 pt-6 border-t flex justify-end gap-4">
-                    <button
-                      onClick={() => navigate(`/groups/${id}/edit`)}
-                      className="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-5 rounded-lg shadow"
-                    >
-                      Edit Group
-                    </button>
-                    <button
-                      onClick={handleDelete}
-                      className="bg-red-600 hover:bg-red-700 text-white font-medium py-2 px-5 rounded-lg shadow"
-                    >
-                      Delete Group
-                    </button>
-                  </div>
-                )}
-              </>
+            {isAuthorized && (
+              <div className="mt-16 pt-10 border-t border-gray-300 flex justify-end space-x-4">
+                <button
+                  onClick={() => navigate(`/groups/${id}/edit`)}
+                  className="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-6 rounded-lg shadow"
+                >
+                  Edit Group
+                </button>
+                <button
+                  onClick={handleDelete}
+                  className="bg-red-600 hover:bg-red-700 text-white font-medium py-2 px-6 rounded-lg shadow"
+                >
+                  Delete Group
+                </button>
+              </div>
             )}
           </div>
         ) : (
-          <div className="text-center text-gray-500 text-lg">Loading...</div>
+          <div className="text-center text-gray-500 text-xl font-medium">
+            Loading...
+          </div>
         )}
       </main>
     </div>
