@@ -1,12 +1,11 @@
 import { useState } from "react";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";  // Import useNavigate
+import { useNavigate } from "react-router-dom"; // Import useNavigate
 const apiUrl = import.meta.env.VITE_API_URL;
-
 
 const Login = () => {
   const [form, setForm] = useState({ email: "", password: "" });
-  const navigate = useNavigate();  // Initialize the navigate function
+  const navigate = useNavigate(); // Initialize the navigate function
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -16,7 +15,11 @@ const Login = () => {
     e.preventDefault();
     try {
       const res = await axios.post(`${apiUrl}/api/auth/login`, form);
+
       localStorage.setItem("token", res.data.token); // Save JWT token
+      localStorage.setItem("user", JSON.stringify(res.data.user)); // ✅ This line is critical
+      localStorage.setItem("role", res.data.user.role); // optional
+
       alert("Login successful!");
       navigate("/"); // Redirect to home page
     } catch (err) {
@@ -27,10 +30,14 @@ const Login = () => {
   return (
     <div className="bg-[#f0f4f8] min-h-screen flex items-center justify-center">
       <div className="max-w-md w-full p-8 bg-white rounded-lg shadow-lg">
-        <h2 className="text-3xl font-semibold text-center text-[#003168] mb-6">Login</h2>
+        <h2 className="text-3xl font-semibold text-center text-[#003168] mb-6">
+          Login
+        </h2>
         <form onSubmit={handleLogin} className="space-y-6">
           <div className="space-y-2">
-            <label htmlFor="email" className="text-sm text-gray-700">Email</label>
+            <label htmlFor="email" className="text-sm text-gray-700">
+              Email
+            </label>
             <input
               type="email"
               name="email"
@@ -44,7 +51,9 @@ const Login = () => {
           </div>
 
           <div className="space-y-2">
-            <label htmlFor="password" className="text-sm text-gray-700">Password</label>
+            <label htmlFor="password" className="text-sm text-gray-700">
+              Password
+            </label>
             <input
               type="password"
               name="password"
@@ -67,7 +76,10 @@ const Login = () => {
           <div className="text-center mt-4">
             <p className="text-sm text-gray-500">
               Don't have an account?{" "}
-              <span className="text-[#003168] font-semibold cursor-pointer" onClick={() => navigate("/register")}>
+              <span
+                className="text-[#003168] font-semibold cursor-pointer"
+                onClick={() => navigate("/register")}
+              >
                 Register here
               </span>
             </p>
