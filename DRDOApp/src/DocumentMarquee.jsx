@@ -26,7 +26,7 @@ const DocumentMarquee = () => {
         {documents.map((doc, idx) => (
           <a
             key={idx}
-            href={`http://localhost:5000${doc.url}`}
+            href={`${apiUri}${doc.url}`}
             target="_blank"
             rel="noopener noreferrer"
             className="doc-link"
