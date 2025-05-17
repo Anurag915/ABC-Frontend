@@ -6,6 +6,7 @@ import Footer from "./Footer";
 const apiUrl = import.meta.env.VITE_API_URL;
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
+import DocumentMarquee from "./DocumentMarquee";
 
 function HomePage() {
   const [groups, setGroups] = useState([]);
@@ -33,14 +34,14 @@ function HomePage() {
 
   return (
     <div className="min-h-screen flex flex-col font-sans bg-white text-black">
-
       <main className="flex-1 px-6 sm:px-10 md:px-20 py-10 bg-gradient-to-br from-gray-50 to-blue-50">
         <div className="text-center mb-10">
           <h1 className="text-4xl md:text-5xl font-extrabold text-blue-800 drop-shadow">
             Welcome to Our Research Groups
           </h1>
           <p className="text-gray-700 mt-2 text-lg">
-            Discover innovations, explore breakthroughs, and connect with experts.
+            Discover innovations, explore breakthroughs, and connect with
+            experts.
           </p>
         </div>
 
@@ -55,7 +56,9 @@ function HomePage() {
         )}
 
         {error && (
-          <div className="text-red-500 text-center mb-4 font-medium">{error}</div>
+          <div className="text-red-500 text-center mb-4 font-medium">
+            {error}
+          </div>
         )}
 
         {loading ? (
@@ -65,7 +68,8 @@ function HomePage() {
         ) : (
           <>
             <p className="text-gray-600 mb-4">
-              Showing <span className="font-semibold">{groups.length}</span> group{groups.length !== 1 && 's'}
+              Showing <span className="font-semibold">{groups.length}</span>{" "}
+              group{groups.length !== 1 && "s"}
             </p>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
@@ -82,7 +86,9 @@ function HomePage() {
                 >
                   <div className="flex items-center gap-3 mb-4">
                     <FaUserShield className="text-blue-600 text-3xl" />
-                    <h3 className="text-xl font-bold text-blue-800">{group.name}</h3>
+                    <h3 className="text-xl font-bold text-blue-800">
+                      {group.name}
+                    </h3>
                   </div>
                   <p className="text-gray-600 text-sm">{group.description}</p>
                 </motion.div>
@@ -91,7 +97,6 @@ function HomePage() {
           </>
         )}
       </main>
-
     </div>
   );
 }

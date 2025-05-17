@@ -168,9 +168,27 @@ const GroupDetails = () => {
               <h1 className="text-4xl font-bold text-blue-800 mb-3">
                 {group.name}
               </h1>
-              <p className="text-lg text-gray-600 leading-relaxed">
+              <p className="text-lg text-gray-600 leading-relaxed mb-4">
                 {group.description}
               </p>
+
+              {group.vision && (
+                <div className="mb-4">
+                  <h3 className="text-2xl font-semibold text-blue-700">
+                    Vision
+                  </h3>
+                  <p className="text-gray-700">{group.vision}</p>
+                </div>
+              )}
+
+              {group.mission && (
+                <div>
+                  <h3 className="text-2xl font-semibold text-blue-700 mt-6">
+                    Mission
+                  </h3>
+                  <p className="text-gray-700">{group.mission}</p>
+                </div>
+              )}
             </header>
 
             {renderFileListSection(

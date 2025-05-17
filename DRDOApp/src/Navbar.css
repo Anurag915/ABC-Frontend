@@ -1,0 +1,18 @@
+/* Navbar.css */
+nav {
+  position: fixed;
+  top: 40px;               /* same as your marquee’s height */
+  left: 0;
+  width: 100%;
+  z-index: 1100;           /* above the marquee */
+  background-color: #003168;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+.navbar-container {
+  /* you can keep your inner flex styles here */
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 60px;            /* your navbar height */
+  padding: 0 1rem;         /* adjust your horizontal padding */
+}

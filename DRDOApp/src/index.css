@@ -67,3 +67,8 @@ button:focus-visible {
     background-color: #ffffff;
   }
 }
+
+.navbar-container {
+  text-align: left !important;
+  width: 100%;
+}
