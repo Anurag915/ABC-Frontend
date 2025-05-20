@@ -1,18 +1,45 @@
 /* Navbar.css */
 nav {
   position: fixed;
-  top: 40px;               /* same as your marquee’s height */
+  top: 40px; /* same as .marquee height */
   left: 0;
   width: 100%;
-  z-index: 1100;           /* above the marquee */
+  z-index: 1100; /* Above the marquee */
   background-color: #003168;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
+
 .navbar-container {
-  /* you can keep your inner flex styles here */
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  height: 60px;            /* your navbar height */
-  padding: 0 1rem;         /* adjust your horizontal padding */
+  justify-content: flex-start;
+  height: 60px;
+  /* padding: 0; */
+  gap: 1rem;
+  /* padding-left: 1rem;
+  padding-right: 1rem; */
+}
+
+.navbar-container button,
+.navbar-container a {
+  color: white;
+  background: transparent;
+  border: none;
+  font-size: 1rem;
+  cursor: pointer;
+  text-decoration: none;
+}
+.navbar-container button:hover,
+.navbar-container a:hover {
+  text-decoration: underline;
+}
+
+/* ONLY hits your main Navbar */
+.main-navbar {
+  position: fixed;
+
+  top: 96px;
+  left: 0;
+  width: 100%;
+  z-index: 1050;
 }

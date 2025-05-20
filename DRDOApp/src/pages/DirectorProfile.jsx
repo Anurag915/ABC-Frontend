@@ -11,19 +11,29 @@ const DirectorProfile = () => {
   const token = localStorage.getItem("token");
 
   useEffect(() => {
-    const fetchDirector = async () => {
+    const fetchLab = async () => {
       try {
         const response = await axios.get(
           `${apiUri}/api/labs/68281329c79492a7cf984910`
         );
-        setDirector(response.data.director);
+
+        // The response contains multiple directors - pick the currently serving one
+        // currently serving director has `to` == null or future date
+        const directors = response.data.directors || [];
+
+        const currentDirector =
+          directors.find(
+            (d) => !d.to || new Date(d.to) > new Date()
+          ) || directors[0] || null;
+
+        setDirector(currentDirector);
         setAbout(response.data.about);
       } catch (error) {
-        console.error("Error fetching director info:", error);
+        console.error("Error fetching lab info:", error);
       }
     };
 
-    fetchDirector();
+    fetchLab();
   }, []);
 
   const handleEditClick = () => {
@@ -57,22 +67,26 @@ const DirectorProfile = () => {
         Director Profile
       </h1>
       <div className="flex flex-col md:flex-row items-start gap-6">
-        {director.photo && (
+        {director.image && (
           <img
-            src={`${apiUri}${director.photo}`}
+            src={`${apiUri}${director.image}`}
             alt="Director"
             className="w-48 h-56 object-cover rounded-lg shadow-lg"
           />
         )}
         <div>
           <p className="text-lg text-gray-700 mb-2">
-            👨‍🔬 <strong>Name:</strong> {director.name}
+            👨‍🔬 <strong>Name:</strong> {director.user.name || "N/A"}
           </p>
           <p className="text-lg text-gray-700 mb-2">
-            📧 <strong>Email:</strong> {director.email}
+            🏢 <strong>Designation:</strong> {director.designation || "Director, CFEES"}
           </p>
           <p className="text-lg text-gray-700 mb-2">
-            🏢 <strong>Position:</strong> Director, CFEES
+            📅 <strong>Serving From:</strong> {new Date(director.from).toLocaleDateString()}
+          </p>
+          <p className="text-lg text-gray-700 mb-2">
+            <strong>Serving To:</strong>{" "}
+            {director.to ? new Date(director.to).toLocaleDateString() : "Present"}
           </p>
 
           {editMode ? (
