@@ -1,17 +1,17 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-
-const ContactInfoGroup = () => {
+const apiUrl = import.meta.env.VITE_API_URL || "http://localhost:5000";
+const ContactInfoGroup = ({groupId}) => {
   const [contactInfo, setContactInfo] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
-  const groupId = "681f9b5a8d8604b345c6e118";
+  // const groupId = "681f9b5a8d8604b345c6e118";
 
   useEffect(() => {
     const fetchContactInfo = async () => {
       try {
-        const res = await axios.get(`http://localhost:5000/api/groups/${groupId}`);
+        const res = await axios.get(`${apiUrl}/api/groups/${groupId}`);
         setContactInfo(res.data.contactInfo || []);
       } catch (err) {
         console.error(err);
@@ -50,3 +50,4 @@ const ContactInfoGroup = () => {
 };
 
 export default ContactInfoGroup;
+
