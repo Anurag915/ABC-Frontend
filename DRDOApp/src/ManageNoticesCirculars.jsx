@@ -4,12 +4,12 @@ const apiUrl = import.meta.env.VITE_API_URL;
 
 const styles = {
   card: {
-    border: "1px solid #ddd",
+    border: "1px solid #d39e00",
     borderRadius: "8px",
     padding: "16px",
     marginBottom: "16px",
-    boxShadow: "0 2px 5px rgba(0,0,0,0.1)",
-    backgroundColor: "#fff",
+    boxShadow: "0 2px 5px rgba(211,158,0,0.3)",
+    backgroundColor: "#fff8e1",
     maxWidth: "400px",
     position: "relative",
   },
@@ -21,9 +21,9 @@ const styles = {
   },
   title: {
     marginBottom: "12px",
-    borderBottom: "2px solid #007bff",
+    borderBottom: "2px solid #ffb300", // amber darken-1
     paddingBottom: "4px",
-    color: "#007bff",
+    color: "#ffb300",
   },
   button: {
     marginRight: "8px",
@@ -33,33 +33,33 @@ const styles = {
     cursor: "pointer",
   },
   updateBtn: {
-    backgroundColor: "#007bff",
+    backgroundColor: "#ffb300",
     color: "white",
   },
   deleteBtn: {
-    backgroundColor: "#dc3545",
+    backgroundColor: "#ff6f00", // amber darken-3
     color: "white",
   },
   saveBtn: {
-    backgroundColor: "#28a745",
-    color: "white",
+    backgroundColor: "#ffca28", // amber lighten-1
+    color: "black",
   },
   cancelBtn: {
-    backgroundColor: "#6c757d",
-    color: "white",
+    backgroundColor: "#ffcc80", // amber lighten-3
+    color: "black",
   },
   form: {
     marginBottom: "20px",
     padding: "16px",
-    border: "1px solid #ccc",
+    border: "1px solid #ffd54f",
     borderRadius: "8px",
-    backgroundColor: "#f9f9f9",
+    backgroundColor: "#fff8e1",
   },
 };
 
-const LAB_ID = "68281329c79492a7cf984910";
+// const LAB_ID = "68315940ee72c6f60d068909";
 
-function ManageNoticesCirculars() {
+function ManageNoticesCirculars({labId}) {
   const [labData, setLabData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -89,7 +89,7 @@ function ManageNoticesCirculars() {
   const fetchLabData = async () => {
     setLoading(true);
     try {
-      const response = await axios.get(`${apiUrl}/api/labs/${LAB_ID}`, {
+      const response = await axios.get(`${apiUrl}/api/labs/${labId}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       setLabData(response.data);
@@ -113,7 +113,7 @@ function ManageNoticesCirculars() {
   const handleDelete = async (type, id) => {
     if (!window.confirm("Are you sure you want to delete this item?")) return;
     try {
-      await axios.delete(`${apiUrl}/api/labs/${LAB_ID}/${type}/${id}`, {
+      await axios.delete(`${apiUrl}/api/labs/${labId}/${type}/${id}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       fetchLabData();
@@ -136,7 +136,7 @@ function ManageNoticesCirculars() {
   const handleUpdateSubmit = async (e) => {
     e.preventDefault();
     const { type, id } = editing;
-    const url = `${apiUrl}/api/labs/${LAB_ID}/${type}/${id}`;
+    const url = `${apiUrl}/api/labs/${labId}/${type}/${id}`;
     const data = new FormData();
     data.append("name", formData.name);
     data.append("description", formData.description);
@@ -172,7 +172,7 @@ function ManageNoticesCirculars() {
 
     try {
       await axios.post(
-        `${apiUrl}/api/labs/${LAB_ID}/${
+        `${apiUrl}/api/labs/${labId}/${
           type === "notice" ? "notices" : "circulars"
         }`,
         form,
@@ -247,7 +247,7 @@ function ManageNoticesCirculars() {
                 }
                 target="_blank"
                 rel="noreferrer"
-                style={{ color: "#007bff" }}
+                style={{ color: "#ffb300" }}
               >
                 View Document
               </a>

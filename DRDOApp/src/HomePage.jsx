@@ -7,7 +7,7 @@ import Contact from "./Contact";
 import NoticesAndCirculars from "./NoticesAndCirculars";
 import ProductsAndAdvertisements from "./ProductsAndAdvertisements";
 
-const labId = "68281329c79492a7cf984910"; // Replace with the actual lab ID
+const labId = "6831e91d804bf498865b819d"; // Replace with the actual lab ID
 const sections = [
   "About Lab",
   "Vision and Mission",
@@ -29,7 +29,7 @@ function HomePage() {
       case "About Lab":
         return <LabDetails />;
       case "Vision and Mission":
-        return <VisionMission />;
+        return <VisionMission labId={labId}/>;
       case "Director Profile":
         return <DirectorProfile />;
       case "O/o Director":
@@ -41,11 +41,11 @@ function HomePage() {
       case "Personal Details":
         return <p>Staff directory and associated researchers...</p>;
       case "Notices & Circular":
-        return <NoticesAndCirculars />;
+        return <NoticesAndCirculars labId={labId}/>;
       case "Product & Advertisement":
         return <ProductsAndAdvertisements labId={labId} />;
       case "Contact Us":
-        return <Contact />;
+        return <Contact labId={labId}/>;
       default:
         return null;
     }

@@ -9,7 +9,7 @@ function NoticesAndCirculars({ labId }) {
   useEffect(() => {
     async function fetchNoticesAndCirculars() {
       try {
-        const res = await fetch(`${apiUrl}/api/labs/68281329c79492a7cf984910`);
+        const res = await fetch(`${apiUrl}/api/labs/${labId}`);
         if (!res.ok) throw new Error("Failed to fetch data");
         const lab = await res.json();
         setData({ notices: lab.notices || [], circulars: lab.circulars || [] });

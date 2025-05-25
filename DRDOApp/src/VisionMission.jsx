@@ -4,7 +4,7 @@ import { Eye, Target } from 'lucide-react';
 
 const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:5000';
 
-export default function VisionMission() {
+export default function VisionMission({labId}) {
   const [labData, setLabData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -12,7 +12,7 @@ export default function VisionMission() {
   useEffect(() => {
     const fetchLabData = async () => {
       try {
-        const res = await axios.get(`${apiUrl}/api/labs/68281329c79492a7cf984910`);
+        const res = await axios.get(`${apiUrl}/api/labs/${labId}`);
         setLabData(res.data);
       } catch (err) {
         console.error('Error fetching lab data:', err);

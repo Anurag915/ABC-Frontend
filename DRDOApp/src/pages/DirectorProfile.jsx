@@ -8,26 +8,21 @@ const DirectorProfile = () => {
   const [about, setAbout] = useState("");
   const [editAbout, setEditAbout] = useState("");
   const [editMode, setEditMode] = useState(false);
+  const [addMode, setAddMode] = useState(false);
+  const [newDirector, setNewDirector] = useState({ user: "", from: "", to: "" });
+
   const token = localStorage.getItem("token");
+  const userRole = localStorage.getItem("role"); // 'admin' if admin
+
+  const labId = "6831e91d804bf498865b819d";
 
   useEffect(() => {
     const fetchLab = async () => {
       try {
-        const response = await axios.get(
-          `${apiUri}/api/labs/68281329c79492a7cf984910`
-        );
-
-        // The response contains multiple directors - pick the currently serving one
-        // currently serving director has `to` == null or future date
-        const directors = response.data.directors || [];
-
-        const currentDirector =
-          directors.find(
-            (d) => !d.to || new Date(d.to) > new Date()
-          ) || directors[0] || null;
-
+        const response = await axios.get(`${apiUri}/api/labs/${labId}`);
+        const currentDirector = response.data.currentDirector || null;
         setDirector(currentDirector);
-        setAbout(response.data.about);
+        setAbout(currentDirector?.about || response.data.about || "");
       } catch (error) {
         console.error("Error fetching lab info:", error);
       }
@@ -44,7 +39,7 @@ const DirectorProfile = () => {
   const handleSaveAbout = async () => {
     try {
       await axios.put(
-        `${apiUri}/api/labs/68281329c79492a7cf984910/about`,
+        `${apiUri}/api/labs/${labId}/about`,
         { about: editAbout },
         { headers: { Authorization: `Bearer ${token}` } }
       );
@@ -57,36 +52,54 @@ const DirectorProfile = () => {
     }
   };
 
+  const handleAddDirector = async () => {
+    try {
+      await axios.post(
+        `${apiUri}/api/labs/${labId}/directors`,
+        newDirector,
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+      alert("New director added.");
+      setAddMode(false);
+      setNewDirector({ user: "", from: "", to: "" });
+      window.location.reload(); // Refresh to get new director
+    } catch (error) {
+      console.error("Error adding director", error);
+      alert("Failed to add director.");
+    }
+  };
+
   if (!director) {
     return <div className="text-center mt-10">Loading director profile...</div>;
   }
 
   return (
     <div className="max-w-4xl mx-auto p-6">
-      <h1 className="text-3xl font-bold text-[#003168] mb-4">
-        Director Profile
-      </h1>
+      <h1 className="text-3xl font-bold text-[#003168] mb-4">Director Profile</h1>
       <div className="flex flex-col md:flex-row items-start gap-6">
-        {director.image && (
+        {director.photo && (
           <img
-            src={`${apiUri}${director.image}`}
+            src={`${apiUri}${director.photo}`}
             alt="Director"
             className="w-48 h-56 object-cover rounded-lg shadow-lg"
           />
         )}
         <div>
           <p className="text-lg text-gray-700 mb-2">
-            👨‍🔬 <strong>Name:</strong> {director.user.name || "N/A"}
+            👨‍🔬 <strong>Name:</strong> {director.name || "N/A"}
           </p>
           <p className="text-lg text-gray-700 mb-2">
-            🏢 <strong>Designation:</strong> {director.designation || "Director, CFEES"}
+            🏢 <strong>Designation:</strong> Head of Robotics
           </p>
           <p className="text-lg text-gray-700 mb-2">
-            📅 <strong>Serving From:</strong> {new Date(director.from).toLocaleDateString()}
+            📅 <strong>Serving From:</strong>{" "}
+            {new Date(director.employmentPeriod?.from).toLocaleDateString()}
           </p>
           <p className="text-lg text-gray-700 mb-2">
             <strong>Serving To:</strong>{" "}
-            {director.to ? new Date(director.to).toLocaleDateString() : "Present"}
+            {director.employmentPeriod?.to
+              ? new Date(director.employmentPeriod.to).toLocaleDateString()
+              : "Present"}
           </p>
 
           {editMode ? (
@@ -128,6 +141,66 @@ const DirectorProfile = () => {
             >
               Edit About
             </button>
+          )}
+
+          {userRole === "admin" && (
+            <div className="mt-6">
+              {!addMode ? (
+                <button
+                  onClick={() => setAddMode(true)}
+                  className="bg-purple-700 text-white px-4 py-2 rounded hover:bg-purple-800"
+                >
+                  Add New Director
+                </button>
+              ) : (
+                <div className="mt-4 border p-4 rounded-md bg-gray-50">
+                  <h3 className="text-lg font-semibold text-[#003168] mb-2">
+                    Add Director
+                  </h3>
+                  <input
+                    type="text"
+                    placeholder="User ID"
+                    value={newDirector.user}
+                    onChange={(e) =>
+                      setNewDirector({ ...newDirector, user: e.target.value })
+                    }
+                    className="w-full mb-2 p-2 border rounded"
+                  />
+                  <label className="block mb-1">From Date</label>
+                  <input
+                    type="date"
+                    value={newDirector.from}
+                    onChange={(e) =>
+                      setNewDirector({ ...newDirector, from: e.target.value })
+                    }
+                    className="w-full mb-2 p-2 border rounded"
+                  />
+                  <label className="block mb-1">To Date (optional)</label>
+                  <input
+                    type="date"
+                    value={newDirector.to}
+                    onChange={(e) =>
+                      setNewDirector({ ...newDirector, to: e.target.value })
+                    }
+                    className="w-full mb-2 p-2 border rounded"
+                  />
+                  <div className="flex gap-2">
+                    <button
+                      onClick={handleAddDirector}
+                      className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700"
+                    >
+                      Submit
+                    </button>
+                    <button
+                      onClick={() => setAddMode(false)}
+                      className="bg-gray-400 text-white px-4 py-2 rounded hover:bg-gray-500"
+                    >
+                      Cancel
+                    </button>
+                  </div>
+                </div>
+              )}
+            </div>
           )}
         </div>
       </div>

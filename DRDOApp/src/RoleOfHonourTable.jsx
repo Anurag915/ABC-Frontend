@@ -6,7 +6,6 @@ function RoleOfHonourTable({ labId }) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // Fetch lab data
   useEffect(() => {
     fetch(`${apiUrl}/api/labs/${labId}`)
       .then((res) => {
@@ -14,7 +13,7 @@ function RoleOfHonourTable({ labId }) {
         return res.json();
       })
       .then((data) => {
-        setDirectors(data.directors || []);
+        setDirectors(data.directorHistory || []);
         setLoading(false);
       })
       .catch((err) => {
@@ -31,10 +30,9 @@ function RoleOfHonourTable({ labId }) {
       <table className="min-w-full border border-gray-300 rounded-lg shadow-sm">
         <thead className="bg-blue-100">
           <tr>
-            <th className="border border-gray-300 px-4 py-2 text-left">
-              Serial Number
-            </th>
+            <th className="border border-gray-300 px-4 py-2 text-left">#</th>
             <th className="border border-gray-300 px-4 py-2 text-left">Name</th>
+            <th className="border border-gray-300 px-4 py-2 text-left">Designation</th>
             <th className="border border-gray-300 px-4 py-2 text-left">From</th>
             <th className="border border-gray-300 px-4 py-2 text-left">To</th>
           </tr>
@@ -42,36 +40,21 @@ function RoleOfHonourTable({ labId }) {
         <tbody>
           {directors.length === 0 ? (
             <tr>
-              <td colSpan="4" className="text-center p-4 text-gray-500">
-                No data available
-              </td>
+              <td colSpan="5" className="text-center p-4 text-gray-500">No data available</td>
             </tr>
           ) : (
             directors.map((director, index) => {
-              const name =
-                director.name ||
-                director.user?.name ||
-                `${director.user?._id.name || ""} ${director.user?._id.name || ""}`.trim() ||
-                "N/A";
-
+              const name = director.name || director.user?.name || "N/A";
               return (
-                <tr
-                  key={director._id || index}
-                  className={index % 2 === 0 ? "bg-white" : "bg-gray-50"}
-                >
-                  <td className="border border-gray-300 px-4 py-2">
-                    {index + 1}
-                  </td>
+                <tr key={director._id || index} className={index % 2 === 0 ? "bg-white" : "bg-gray-50"}>
+                  <td className="border border-gray-300 px-4 py-2">{index + 1}</td>
                   <td className="border border-gray-300 px-4 py-2">{name}</td>
+                  <td className="border border-gray-300 px-4 py-2">{director.designation || "N/A"}</td>
                   <td className="border border-gray-300 px-4 py-2">
-                    {director.from
-                      ? new Date(director.from).toLocaleDateString()
-                      : "N/A"}
+                    {director.from ? new Date(director.from).toLocaleDateString() : "N/A"}
                   </td>
                   <td className="border border-gray-300 px-4 py-2">
-                    {director.to
-                      ? new Date(director.to).toLocaleDateString()
-                      : "Present"}
+                    {director.to ? new Date(director.to).toLocaleDateString() : "Present"}
                   </td>
                 </tr>
               );

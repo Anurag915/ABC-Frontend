@@ -3,11 +3,11 @@ import axios from 'axios';
 
 const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:5000';
 
-function Contact() {
+function Contact({ labId }) {
   const [labData, setLabData] = useState(null);
 
   useEffect(() => {
-    axios.get(`${apiUrl}/api/labs/68281329c79492a7cf984910`)
+    axios.get(`${apiUrl}/api/labs/${labId}`)
       .then(res => setLabData(res.data))
       .catch(err => console.error(err));
   }, []);
