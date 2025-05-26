@@ -19,7 +19,7 @@ function AboutGroup({ groupId }) {
     );
 
   return (
-    <div className="max-w-3xl mx-auto p-6 bg-white rounded-lg shadow-md border border-gray-200">
+    <div className=" mx-auto p-6 bg-white rounded-lg shadow-md border border-gray-200">
       <h1 className="text-4xl font-bold text-green-800 mb-4">{group.name}</h1>
       <section className="mb-6">
         <h2 className="text-xl font-semibold text-green-700 mb-2">About the Group</h2>

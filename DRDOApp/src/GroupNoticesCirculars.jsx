@@ -61,7 +61,7 @@ function GroupNoticesCirculars({ groupId }) {
     ));
 
   return (
-    <div style={{ maxWidth: '700px', margin: '2rem auto', padding: '0 1rem' }}>
+    <div style={{  margin: '2rem auto', padding: '0 1rem' }}>
       <h2 style={{ borderBottom: '2px solid #007bff', paddingBottom: '0.5rem' }}>
         Notices
       </h2>

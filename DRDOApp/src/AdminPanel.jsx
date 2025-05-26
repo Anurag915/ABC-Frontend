@@ -4,12 +4,14 @@ import ManageNoticesCirculars from "./ManageNoticesCirculars";
 import ManageProductAdvertisements from "./ManageProductAdvertisements";
 import ManageUsers from "./ManageUsers";
 import Directors from "./Directors";
+import ManageGroups from "./ManageGroups";
 const adminSections = [
   "Manage Labs",
   "Manage Directors",
   "Manage Notices & Circulars",
   "Manage Products & Advertisements",
   "Manage Users",
+  "Manage Groups",
 ];
 const labId = "6831e91d804bf498865b819d"; // Replace with the actual lab ID
 function AdminPanel() {
@@ -27,14 +29,16 @@ function AdminPanel() {
         return <ManageProductAdvertisements labId={labId} />;
       case "Manage Users":
         return <ManageUsers />;
+      case "Manage Groups":
+        return <ManageGroups />;
       default:
         return <p>Select a section to manage.</p>;
     }
   };
 
   return (
-    <div className="min-h-screen bg-amber-50 font-sans text-gray-900 mt-8">
-      <main className="flex flex-col md:flex-row max-w-7xl mx-auto shadow-lg rounded-lg bg-white">
+    <div className=" bg-amber-50 font-sans text-gray-900 mt-8">
+      <main className="flex flex-col md:flex-row mx-auto shadow-lg rounded-lg bg-white">
         {/* Sidebar */}
         <aside className="w-full md:w-1/4 bg-amber-100 p-6 space-y-4 rounded-l-lg border-r border-amber-300 shadow-inner">
           {adminSections.map((section) => (

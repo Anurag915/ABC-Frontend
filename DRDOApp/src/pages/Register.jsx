@@ -1,8 +1,6 @@
-
-
 import { useState } from "react";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";  // Import useNavigate
+import { useNavigate } from "react-router-dom"; // Import useNavigate
 const apiUrl = import.meta.env.VITE_API_URL;
 
 const Register = () => {
@@ -12,7 +10,7 @@ const Register = () => {
     password: "",
     role: "employee",
   });
-  const navigate = useNavigate();  // Initialize the navigate function
+  const navigate = useNavigate(); // Initialize the navigate function
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -23,7 +21,7 @@ const Register = () => {
     try {
       const res = await axios.post(`${apiUrl}/api/auth/register`, form);
       alert("Registration successful! Please login.");
-      navigate("/login");  // Redirect to login page after successful registration
+      navigate("/login"); // Redirect to login page after successful registration
     } catch (err) {
       alert(err.response?.data?.message || "Registration failed.");
     }
@@ -32,10 +30,14 @@ const Register = () => {
   return (
     <div className="bg-[#f0f4f8] min-h-screen flex items-center justify-center">
       <div className="max-w-md w-full p-8 bg-white rounded-lg shadow-lg">
-        <h2 className="text-3xl font-semibold text-center text-[#003168] mb-6">Register</h2>
+        <h2 className="text-3xl font-semibold text-center text-[#003168] mb-6">
+          Register
+        </h2>
         <form onSubmit={handleRegister} className="space-y-6">
           <div className="space-y-2">
-            <label htmlFor="name" className="text-sm text-gray-700">Full Name</label>
+            <label htmlFor="name" className="text-sm text-gray-700">
+              Full Name
+            </label>
             <input
               type="text"
               name="name"
@@ -49,7 +51,9 @@ const Register = () => {
           </div>
 
           <div className="space-y-2">
-            <label htmlFor="email" className="text-sm text-gray-700">Email</label>
+            <label htmlFor="email" className="text-sm text-gray-700">
+              Email
+            </label>
             <input
               type="email"
               name="email"
@@ -63,7 +67,9 @@ const Register = () => {
           </div>
 
           <div className="space-y-2">
-            <label htmlFor="password" className="text-sm text-gray-700">Password</label>
+            <label htmlFor="password" className="text-sm text-gray-700">
+              Password
+            </label>
             <input
               type="password"
               name="password"
@@ -77,7 +83,9 @@ const Register = () => {
           </div>
 
           <div className="space-y-2">
-            <label htmlFor="role" className="text-sm text-gray-700">Role</label>
+            <label htmlFor="role" className="text-sm text-gray-700">
+              Role
+            </label>
             <select
               name="role"
               id="role"

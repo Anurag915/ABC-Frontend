@@ -107,7 +107,7 @@ const Profile = () => {
   }
 
   return (
-    <div className="max-w-5xl mx-auto px-4 py-10 bg-white rounded-2xl shadow-lg">
+    <div className=" mx-auto px-4 py-10 bg-white rounded-2xl shadow-lg">
       {/* Header */}
       <div className="flex flex-col md:flex-row justify-between items-center mb-10 gap-6">
         <div>

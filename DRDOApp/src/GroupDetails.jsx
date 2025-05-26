@@ -64,8 +64,8 @@ function GroupPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 font-sans text-black mt-8">
-      <main className="flex flex-col md:flex-row max-w-7xl mx-auto shadow-lg rounded-lg bg-white">
+    <div className=" bg-gray-50 font-sans text-black mt-8">
+      <main className="flex flex-col md:flex-row mx-auto shadow-lg rounded-lg bg-white">
         {/* Sidebar */}
         <aside className="w-full md:w-1/4 bg-green-100 p-6 space-y-4 rounded-l-lg border-r border-green-300 shadow-inner">
           {sections.map((section) => (

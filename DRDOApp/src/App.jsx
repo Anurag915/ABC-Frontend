@@ -18,6 +18,8 @@ import AdminLayout from "./AdminLayout";
 import ManageLabInfo from "./pages/ManageLabInfo";
 import AdminPanel from "./AdminPanel";
 import ManageNoticesCirculars from "./ManageNoticesCirculars";
+import ManageGroups from "./ManageGroups";
+
 function App() {
   return (
     <Router>
@@ -45,7 +47,6 @@ function App() {
           <Route path="/labs" element={<LabDetails />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="/directorprofile" element={<DirectorProfile />} />
-
           {/* Admin Routes */}
           <Route
             path="/admin"
@@ -57,6 +58,8 @@ function App() {
           >
             <Route path="manage-lab" element={<ManageLabInfo />} />
             <Route path="manage" element={<ManageNoticesCirculars />} />
+            <Route path="groups" element={<ManageGroups />} />
+            <Route path="groups/:id" element={<GroupDetails />} />
           </Route>
         </Routes>
         <Footer />

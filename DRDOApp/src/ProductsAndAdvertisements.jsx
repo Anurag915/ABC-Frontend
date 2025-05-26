@@ -1,18 +1,17 @@
 import React, { useEffect, useState } from "react";
 const apiUrl = import.meta.env.VITE_API_URL || "http://localhost:5000";
-// const labId = "68281329c79492a7cf984910"; // Replace with the actual lab ID
+
 const ProductsAndAdvertisements = ({ labId }) => {
   const [products, setProducts] = useState([]);
   const [advertisements, setAdvertisements] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+
   useEffect(() => {
     const fetchData = async () => {
       try {
         setLoading(true);
-        const res = await fetch(
-          `${apiUrl}/api/labs/${labId}/products-advertisements`
-        );
+        const res = await fetch(`${apiUrl}/api/labs/${labId}/products-advertisements`);
         const data = await res.json();
 
         if (res.ok) {
@@ -32,19 +31,19 @@ const ProductsAndAdvertisements = ({ labId }) => {
     fetchData();
   }, [labId]);
 
-  if (loading) return <p>Loading...</p>;
-  if (error) return <p style={{ color: "red" }}>{error}</p>;
+  if (loading) return <p style={{ fontSize: "1.2rem" }}>Loading...</p>;
+  if (error) return <p style={{ color: "red", fontSize: "1.2rem" }}>{error}</p>;
 
   return (
     <div style={{ padding: "1rem" }}>
-      <h2>Products</h2>
+      <h2 style={headingStyle}>Products</h2>
       {products.length === 0 ? (
-        <p>No products available.</p>
+        <p style={textStyle}>No products available.</p>
       ) : (
         products.map((item, index) => (
           <div key={index} style={cardStyle}>
-            <h4>{item.name}</h4>
-            <p>{item.description}</p>
+            <h4 style={titleStyle}>{item.name}</h4>
+            <p style={textStyle}>{item.description}</p>
             <a
               href={`${apiUrl}${item.fileUrl}`}
               target="_blank"
@@ -57,14 +56,14 @@ const ProductsAndAdvertisements = ({ labId }) => {
         ))
       )}
 
-      <h2 style={{ marginTop: "2rem" }}>Advertisements</h2>
+      <h2 style={{ ...headingStyle, marginTop: "2rem" }}>Advertisements</h2>
       {advertisements.length === 0 ? (
-        <p>No advertisements available.</p>
+        <p style={textStyle}>No advertisements available.</p>
       ) : (
         advertisements.map((item, index) => (
           <div key={index} style={cardStyle}>
-            <h4>{item.name}</h4>
-            <p>{item.description}</p>
+            <h4 style={titleStyle}>{item.name}</h4>
+            <p style={textStyle}>{item.description}</p>
             <a
               href={`${apiUrl}${item.fileUrl}`}
               target="_blank"
@@ -82,16 +81,35 @@ const ProductsAndAdvertisements = ({ labId }) => {
 
 const cardStyle = {
   border: "1px solid #ccc",
-  padding: "1rem",
-  marginBottom: "1rem",
+  padding: "1.5rem",
+  marginBottom: "1.5rem",
   borderRadius: "8px",
   boxShadow: "0 2px 5px rgba(0,0,0,0.1)",
+  fontSize: "1.1rem",
+};
+
+const headingStyle = {
+  fontSize: "1.8rem",
+  fontWeight: "bold",
+  marginBottom: "1rem",
+};
+
+const titleStyle = {
+  fontSize: "1.4rem",
+  fontWeight: "600",
+  marginBottom: "0.5rem",
+};
+
+const textStyle = {
+  fontSize: "1.1rem",
+  color: "#333",
 };
 
 const linkStyle = {
-  color: "#007BFF", // Bootstrap blue
+  color: "#007BFF",
   textDecoration: "underline",
   fontWeight: "bold",
+  fontSize: "1.1rem",
 };
 
 export default ProductsAndAdvertisements;

@@ -15,7 +15,7 @@ const sections = [
   "O/o Director",
   "Role & Honour",
   "Lab History",
-  "Personal Details",
+  "Personnel Details",
   "Notices & Circular",
   "Product & Advertisement",
   "Contact Us",
@@ -38,7 +38,7 @@ function HomePage() {
         return <RoleOfHonourTable labId={labId} />;
       case "Lab History":
         return <p>Founded in 1980, the lab has a long legacy of innovation...</p>;
-      case "Personal Details":
+      case "Personnel Details":
         return <p>Staff directory and associated researchers...</p>;
       case "Notices & Circular":
         return <NoticesAndCirculars labId={labId}/>;
@@ -52,8 +52,8 @@ function HomePage() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 font-sans text-black mt-8">
-      <main className="flex flex-col md:flex-row max-w-7xl mx-auto shadow-lg rounded-lg bg-white">
+    <div className=" bg-gray-50 font-sans text-black mt-8">
+      <main className="flex flex-col md:flex-row  mx-auto shadow-lg rounded-lg bg-white">
         {/* Sidebar */}
         <aside className="w-full md:w-1/4 bg-blue-100 p-6 space-y-4 rounded-l-lg border-r border-blue-300 shadow-inner">
           {sections.map((section) => (

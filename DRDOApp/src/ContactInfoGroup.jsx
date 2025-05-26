@@ -28,7 +28,7 @@ const ContactInfoGroup = ({groupId}) => {
   if (error) return <p className="text-red-500">{error}</p>;
 
   return (
-    <div className="max-w-xl mx-auto p-4">
+    <div className=" mx-auto p-4">
       <h2 className="text-2xl font-bold mb-4 text-blue-700">Contact Information</h2>
       {contactInfo.length === 0 ? (
         <p className="text-gray-600 italic">No contact information available.</p>

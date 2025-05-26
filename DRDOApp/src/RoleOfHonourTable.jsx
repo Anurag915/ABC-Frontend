@@ -32,7 +32,7 @@ function RoleOfHonourTable({ labId }) {
           <tr>
             <th className="border border-gray-300 px-4 py-2 text-left">#</th>
             <th className="border border-gray-300 px-4 py-2 text-left">Name</th>
-            <th className="border border-gray-300 px-4 py-2 text-left">Designation</th>
+            {/* <th className="border border-gray-300 px-4 py-2 text-left">Designation</th> */}
             <th className="border border-gray-300 px-4 py-2 text-left">From</th>
             <th className="border border-gray-300 px-4 py-2 text-left">To</th>
           </tr>
@@ -49,7 +49,7 @@ function RoleOfHonourTable({ labId }) {
                 <tr key={director._id || index} className={index % 2 === 0 ? "bg-white" : "bg-gray-50"}>
                   <td className="border border-gray-300 px-4 py-2">{index + 1}</td>
                   <td className="border border-gray-300 px-4 py-2">{name}</td>
-                  <td className="border border-gray-300 px-4 py-2">{director.designation || "N/A"}</td>
+                  {/* <td className="border border-gray-300 px-4 py-2">{director.designation || "N/A"}</td> */}
                   <td className="border border-gray-300 px-4 py-2">
                     {director.from ? new Date(director.from).toLocaleDateString() : "N/A"}
                   </td>

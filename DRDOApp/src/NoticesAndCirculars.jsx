@@ -53,17 +53,23 @@ function NoticesAndCirculars({ labId }) {
         >
           {name}
         </a>
-        <p style={{ marginTop: "0.3rem", color: "#555", fontSize: "0.9rem" }}>
-          {description}
-        </p>
+        <p className="mt-1 text-gray-600 text-base">{description}</p>
       </li>
     ));
 
   return (
-    <div style={{ maxWidth: "700px", margin: "2rem auto", padding: "0 1rem" }}>
-      <h2 style={{ borderBottom: "2px solid #007bff", paddingBottom: "0.5rem" }}>
+    <div style={{ margin: "2rem auto", padding: "0 1rem" }}>
+      <h2
+        style={{
+          fontSize: "1.5rem",
+          fontWeight: "bold",
+          borderBottom: "2px solid #007bff",
+          paddingBottom: "0.5rem",
+        }}
+      >
         Notices
       </h2>
+
       {data.notices.length > 0 ? (
         <ul style={{ listStyleType: "none", paddingLeft: 0 }}>
           {renderFileList(data.notices)}
@@ -75,13 +81,15 @@ function NoticesAndCirculars({ labId }) {
       <h2
         style={{
           marginTop: "3rem",
+          fontSize: "1.5rem",
+          fontWeight: "bold",
           borderBottom: "2px solid #28a745",
           paddingBottom: "0.5rem",
-          color: "#28a745",
         }}
       >
         Circulars
       </h2>
+
       {data.circulars.length > 0 ? (
         <ul style={{ listStyleType: "none", paddingLeft: 0 }}>
           {renderFileList(data.circulars)}

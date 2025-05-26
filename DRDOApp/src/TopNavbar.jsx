@@ -10,7 +10,7 @@ export default function TopNavbar() {
           className="h-12 w-12 rounded-full shadow-lg hover:scale-105 transition-transform duration-300"
         />
         <span className="text-xl sm:text-2xl font-bold text-white whitespace-nowrap">
-          ABC Company
+          Centre for Fire, Explosive and Environment Safety (CFEES){" "}
         </span>
       </Link>
 

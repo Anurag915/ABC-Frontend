@@ -35,7 +35,7 @@ const GroupEmployees = ({ groupId }) => {
   }
 
   return (
-    <div className="max-w-4xl mx-auto px-4 py-8">
+    <div className=" mx-auto px-4 py-8">
       <div className="flex items-center justify-center mb-6 gap-2">
         <Users className="w-6 h-6 text-green-600" />
         <h2 className="text-2xl font-bold">Team Members</h2>

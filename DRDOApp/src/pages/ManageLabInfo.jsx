@@ -241,7 +241,7 @@ const ManageLabInfo = ({ labId }) => {
   if (loading) return <p className="p-6 text-center text-gray-500">Loading...</p>;
 
   return (
-    <div className="max-w-3xl mx-auto p-8 bg-white rounded-lg shadow-lg border border-gray-200">
+    <div className="mx-auto p-8 bg-white rounded-lg shadow-lg border border-gray-200">
       <h2 className="text-3xl font-semibold mb-8 text-gray-800 border-b pb-4">
         Update Lab Information
       </h2>
