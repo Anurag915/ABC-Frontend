@@ -1,12 +1,50 @@
-# React + Vite
+# ABC Company Web Portal
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+This is a full-stack web application for **ABC Company**, developed using the **MERN stack** (MongoDB, Express, React, Node.js). The system includes authentication, role-based access, profile management, document uploads, and admin functionalities.
 
-Currently, two official plugins are available:
+## 📦 Tech Stack
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- **Frontend:** React.js (Vite)
+- **Backend:** Node.js, Express
+- **Database:** MongoDB (Mongoose ODM)
+- **Authentication:** JWT
+- **File Storage:** Multer with Express API
+- **Styling:** Tailwind CSS
+- **Deployment:** Render (Backend), Vercel/Netlify (Frontend)
 
-## Expanding the ESLint configuration
+---
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+## 🚀 Features
+
+- 🧑 User registration and login
+- 🔐 JWT-based authentication
+- 📄 Upload and view personal documents
+- 🖼️ Upload and update profile photo
+- 📝 Edit name, email, and about info
+- 👤 Role-based rendering (Admin/User)
+- 🛠️ Admin panel for managing lab/group info (in extended use cases)
+
+---
+
+## 🔗 Live Deployment
+
+**Frontend URL:** [https://abc-frontend-iota.vercel.app/](https://your-frontend-url.vercel.app)  
+**Backend API URL:** Set in `.env` as `VITE_API_URL=https://drdo-project.onrender.com`
+
+> ⚠️ **Note:** The **Profile** page doesn't work on local due to API restrictions. It requires access to deployed API endpoints with proper authentication headers.
+
+---
+
+## ⚙️ Setup Instructions (Local Development)
+
+### Prerequisites
+
+- Node.js (v18+)
+- MongoDB instance (local or Atlas)
+- Vite (optional, installed with frontend deps)
+
+### 1. Clone the Repository
+
+```bash
+git clone https://github.com/your-org/abc-company.git
+cd abc-company
