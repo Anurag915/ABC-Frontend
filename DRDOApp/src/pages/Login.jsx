@@ -22,7 +22,7 @@ const Login = () => {
       localStorage.setItem("token", res.data.token); // Save JWT token
       localStorage.setItem("user", JSON.stringify(res.data.user)); // ✅ This line is critical
       localStorage.setItem("role", res.data.user.role); // optional
-      localStorage.setItem("userId", res.data.user.id); // ✅ Store the user ID
+      localStorage.setItem("userId", res.data.user._id); // ✅ Store the user ID
 
       alert("Login successful!");
       navigate("/"); // Redirect to home page
