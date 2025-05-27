@@ -18,7 +18,7 @@ const sections = [
   "Lab History",
   "Personnel Details",
   "Notices & Circular",
-  "Product & Advertisement",
+  "Product & Achievements",
   "Contact Us",
 ];
 
@@ -43,7 +43,7 @@ function HomePage() {
         return <p>Staff directory and associated researchers...</p>;
       case "Notices & Circular":
         return <NoticesAndCirculars labId={labId}/>;
-      case "Product & Advertisement":
+      case "Product & Achievements":
         return <ProductsAndAdvertisements labId={labId} />;
       case "Contact Us":
         return <Contact labId={labId}/>;
