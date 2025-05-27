@@ -15,7 +15,12 @@ const DirectorProfile = () => {
         const response = await axios.get(`${apiUri}/api/labs/${labId}`);
         const currentDirector = response.data.currentDirector || null;
         setDirector(currentDirector);
-        setAbout(currentDirector?.about || response.data.about || "");
+        setAbout(
+          currentDirector?.about ||
+            currentDirector?.user?.about ||
+            response.data.about ||
+            ""
+        );
       } catch (error) {
         console.error("Error fetching lab info:", error);
       }
@@ -39,14 +44,18 @@ const DirectorProfile = () => {
             className="w-40 h-48 object-cover rounded-lg shadow-md"
           />
         )}
-        <h2 className="text-3xl font-bold text-gray-800">{director.name || "N/A"}</h2>
+        <h2 className="text-3xl font-bold text-gray-800">
+          {director.name || "N/A"}
+        </h2>
       </div>
 
       {/* About Section */}
       <div>
         <h3 className="text-2xl font-semibold text-[#003168] mb-3">About</h3>
         <p className="text-lg text-gray-700 leading-relaxed text-justify">
-          {about || "No information provided yet."}
+          {director.about ||
+            director.user?.about ||
+            "No information provided yet."}
         </p>
       </div>
     </div>
