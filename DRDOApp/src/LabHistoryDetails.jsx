@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-
+const apiUrl = import.meta.env.VITE_API_URL || "http://localhost:5000";
 const LabHistoryDetails = ({ labId }) => {
   const [labHistory, setLabHistory] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -10,7 +10,7 @@ const LabHistoryDetails = ({ labId }) => {
     const fetchLabHistory = async () => {
       try {
         setLoading(true);
-        const response = await axios.get(`http://localhost:5000/api/labs/${labId}`);
+        const response = await axios.get(`${apiUrl}/api/labs/${labId}`);
         const details = response.data.LabHistoryDetails || "No history available";
 
         // Split by period followed by space or newline, filter empty, trim spaces
