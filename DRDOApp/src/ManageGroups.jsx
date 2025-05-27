@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
-
+const apiUrl = import.meta.env.VITE_API_URL || "http://localhost:5000";
 function ManageGroups() {
   const [groups, setGroups] = useState([]);
 
   useEffect(() => {
-    fetch("http://localhost:5000/api/groups/")
+    fetch(`${apiUrl}/api/groups/`)
       .then((res) => res.json())
       .then((data) => {
         if (Array.isArray(data)) {
