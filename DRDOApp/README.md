@@ -28,7 +28,7 @@ This is a full-stack web application for **ABC Company**, developed using the **
 
 ## 🔗 Live Deployment
 
-**Frontend URL:** [https://abc-frontend-iota.vercel.app/](https://your-frontend-url.vercel.app)  
+**Frontend URL:** [https://abc-frontend-iota.vercel.app/](https://abc-frontend-iota.vercel.app/)  
 **Backend API URL:** Set in `.env` as `VITE_API_URL=https://drdo-project.onrender.com`
 
 > ⚠️ **Note:** The **Profile** page doesn't work on local due to API restrictions. It requires access to deployed API endpoints with proper authentication headers.
