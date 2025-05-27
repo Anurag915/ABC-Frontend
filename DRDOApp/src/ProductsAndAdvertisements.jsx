@@ -56,9 +56,9 @@ const ProductsAndAdvertisements = ({ labId }) => {
         ))
       )}
 
-      <h2 style={{ ...headingStyle, marginTop: "2rem" }}>Advertisements</h2>
+      <h2 style={{ ...headingStyle, marginTop: "2rem" }}>Achievements</h2>
       {advertisements.length === 0 ? (
-        <p style={textStyle}>No advertisements available.</p>
+        <p style={textStyle}>No achievements available.</p>
       ) : (
         advertisements.map((item, index) => (
           <div key={index} style={cardStyle}>
