@@ -30,7 +30,9 @@ export default function LabDetails() {
   }
 
   if (!lab) {
-    return <p className="text-center text-gray-500 mt-12">No lab data found.</p>;
+    return (
+      <p className="text-center text-gray-500 mt-12">No lab data found.</p>
+    );
   }
 
   return (
@@ -42,9 +44,18 @@ export default function LabDetails() {
           </div>
           <h3 className="text-lg font-semibold text-gray-800">About</h3>
         </div>
-        <p className="text-gray-700 text-lg leading-relaxed">
-          {lab.about?.trim() ? lab.about : "No description available."}
-        </p>
+        {lab.about?.trim() ? (
+          <ul className="list-disc pl-5 space-y-2 text-gray-700 text-lg leading-relaxed">
+            {lab.about
+              .split(/\n|\. ?/) // Split by newline or period + optional space
+              .filter((point) => point.trim().length > 0)
+              .map((point, idx) => (
+                <li key={idx}>{point.trim()}</li>
+              ))}
+          </ul>
+        ) : (
+          <p className="text-gray-700 text-lg">No description available.</p>
+        )}
       </div>
     </div>
   );

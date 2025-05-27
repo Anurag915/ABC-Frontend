@@ -44,6 +44,14 @@ const DirectorProfile = () => {
             className="w-40 h-48 object-cover rounded-lg shadow-md"
           />
         )}
+        {(director.image || director.user?.photo) && (
+          <img
+            src={`${apiUri}${director.image || director.user.photo}`}
+            alt="Director"
+            className="w-40 h-48 object-cover rounded-lg shadow-md"
+          />
+        )}
+
         <h2 className="text-3xl font-bold text-gray-800">
           {director.name || "N/A"}
         </h2>

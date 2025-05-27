@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 const apiUrl = import.meta.env.VITE_API_URL;
-
 function NoticesAndCirculars({ labId }) {
   const [data, setData] = useState({ notices: [], circulars: [] });
   const [loading, setLoading] = useState(true);

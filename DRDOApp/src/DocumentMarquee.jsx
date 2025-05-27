@@ -49,9 +49,15 @@ const DocumentMarquee = () => {
   useEffect(() => {
     const fetchDocuments = async () => {
       try {
-        const res = await fetch(`${apiUri}/api/documents/all`);
+        const res = await fetch(`${apiUri}/api/labs/6831e91d804bf498865b819d/documents`);
         const data = await res.json();
-        setDocuments(data);
+
+        const formattedDocs = [
+          ...(data.notices || []).map(doc => ({ ...doc, type: "Notice" })),
+          ...(data.circulars || []).map(doc => ({ ...doc, type: "Circular" }))
+        ];
+
+        setDocuments(formattedDocs);
       } catch (err) {
         console.error("Failed to fetch documents:", err);
       }
@@ -70,15 +76,15 @@ const DocumentMarquee = () => {
         left: 0,
         right: 0,
         zIndex: 9999,
-        backgroundColor: "#FEF3C7", // yellow-50
-        border: "1px solid #FBBF24", // yellow-400
+        backgroundColor: "#FEF3C7",
+        border: "1px solid #FBBF24",
         padding: "8px 16px",
         display: "flex",
         alignItems: "center",
         overflow: "hidden",
         height: "40px",
         fontWeight: "bold",
-        color: "#B45309", // yellow-700
+        color: "#B45309",
         userSelect: "none",
         fontFamily: "sans-serif",
       }}
@@ -106,26 +112,26 @@ const DocumentMarquee = () => {
         <div
           style={{
             display: "inline-flex",
-            animation: "scroll-left 20s linear infinite",
+            animation: "scroll-left 40s linear infinite",
           }}
         >
           {[...documents, ...documents].map((doc, idx) => (
             <a
               key={idx}
-              href={`${apiUri}${doc.url}`}
+              href={`${apiUri}${doc.fileUrl}`}
               target="_blank"
               rel="noopener noreferrer"
               style={{
                 display: "inline-block",
                 marginRight: "32px",
-                color: "#2563EB", // blue-700
+                color: "#2563EB",
                 textDecoration: "none",
                 whiteSpace: "nowrap",
               }}
               onMouseEnter={e => (e.currentTarget.style.textDecoration = "underline")}
               onMouseLeave={e => (e.currentTarget.style.textDecoration = "none")}
             >
-              {doc.name}
+              {doc.type}: {doc.name}
             </a>
           ))}
         </div>

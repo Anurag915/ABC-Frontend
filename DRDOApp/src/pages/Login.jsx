@@ -6,6 +6,7 @@ const apiUrl = import.meta.env.VITE_API_URL;
 const Login = () => {
   const [form, setForm] = useState({ email: "", password: "" });
   const navigate = useNavigate(); // Initialize the navigate function
+  const [loading, setLoading] = useState(false);
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -13,6 +14,8 @@ const Login = () => {
 
   const handleLogin = async (e) => {
     e.preventDefault();
+    setLoading(true);
+
     try {
       const res = await axios.post(`${apiUrl}/api/auth/login`, form);
 
@@ -25,6 +28,8 @@ const Login = () => {
       navigate("/"); // Redirect to home page
     } catch (err) {
       alert(err.response?.data?.message || "Login failed.");
+    } finally {
+      setLoading(false);
     }
   };
 
