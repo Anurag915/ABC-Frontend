@@ -9,7 +9,7 @@ const adminSections = [
   "Manage Labs",
   "Manage Directors",
   "Manage Notices & Circulars",
-  "Manage Products & Advertisements",
+  "Manage Products & Achievements",
   "Manage Users",
   "Manage Groups",
 ];
@@ -25,7 +25,7 @@ function AdminPanel() {
         return <Directors labId={labId} />;
       case "Manage Notices & Circulars":
         return <ManageNoticesCirculars labId={labId} />;
-      case "Manage Products & Advertisements":
+      case "Manage Products & Achievements":
         return <ManageProductAdvertisements labId={labId} />;
       case "Manage Users":
         return <ManageUsers />;

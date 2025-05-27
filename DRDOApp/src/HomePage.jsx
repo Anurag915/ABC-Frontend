@@ -6,7 +6,8 @@ import VisionMission from "./VisionMission";
 import Contact from "./Contact";
 import NoticesAndCirculars from "./NoticesAndCirculars";
 import ProductsAndAdvertisements from "./ProductsAndAdvertisements";
-
+import OfficeOfDirector from "./OfficeOfDirector";
+import LabHistoryDetails from "./LabHistoryDetails";
 const labId = "6831e91d804bf498865b819d"; // Replace with the actual lab ID
 const sections = [
   "About Lab",
@@ -33,11 +34,11 @@ function HomePage() {
       case "Director Profile":
         return <DirectorProfile />;
       case "O/o Director":
-        return <p>Office of Director handles administration and planning...</p>;
+        return <OfficeOfDirector/>;
       case "Role & Honour":
         return <RoleOfHonourTable labId={labId} />;
       case "Lab History":
-        return <p>Founded in 1980, the lab has a long legacy of innovation...</p>;
+        return <LabHistoryDetails labId={labId}/>;
       case "Personnel Details":
         return <p>Staff directory and associated researchers...</p>;
       case "Notices & Circular":

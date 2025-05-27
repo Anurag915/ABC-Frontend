@@ -107,7 +107,7 @@ const ManageProductAdvertisements = ({labId}) => {
   return (
     <div className="p-4 font-sans" style={{ backgroundColor: "#fff8e1", minHeight: "100vh" }}>
       <h2 className="text-2xl font-bold mb-4" style={{ color: "#ff6f00" }}>
-        Manage Products & Advertisements
+        Manage Products & Achievements
       </h2>
 
       <div className="flex space-x-4 mb-4">
