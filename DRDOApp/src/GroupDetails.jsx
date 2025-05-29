@@ -8,6 +8,7 @@ import GroupProducts from "./GroupProducts";
 import GroupNoticesCirculars from "./GroupNoticesCirculars";
 import GroupEmployees from "./GroupEmployees";
 import AssistantDirectorsTable from "./AssistantDirectorsTable";
+import GroupHistory from "./GroupHistory";
 const sections = [
   "About Group",
   "Vision and Mission",
@@ -44,12 +45,7 @@ function GroupPage() {
       case "Role & Honour":
         return <AssistantDirectorsTable groupId={id} />;
       case "Group History":
-        return (
-          <p>
-            Established in 1995, the group has evolved from a small research
-            unit to a multidisciplinary powerhouse.
-          </p>
-        );
+        return <GroupHistory groupId={id}/>;
       case "Members":
         return <GroupEmployees groupId={id}/>;
       case "Notices & Circular":

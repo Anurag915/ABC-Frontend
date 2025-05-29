@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useParams } from "react-router-dom";
-
+import GroupEditForm from "./GroupEditForm";
+import AssistantDirectorManager from "./AssistantDirectorManager";
 const adminSections = [
   "Manage Groups",
   "Manage AssociateDirectors",
@@ -10,19 +11,19 @@ const adminSections = [
 ];
 
 export default function AdminGroupPanel() {
-  const { id: labId } = useParams(); // Get the lab ID from the URL
-  const [selectedSection, setSelectedSection] = useState("Manage Labs");
+  const { id: groupId } = useParams(); // Get the lab ID from the URL
+  const [selectedSection, setSelectedSection] = useState("Manage Groups");
 
   const renderAdminContent = () => {
     switch (selectedSection) {
       case "Manage Groups":
-        return <p>Static content for managing lab info of Lab ID: <strong>{labId}</strong>.</p>;
+        return <GroupEditForm groupId={groupId}/>;
       case "Manage AssociateDirectors":
-        return <p>Static content for managing directors of Lab ID: <strong>{labId}</strong>.</p>;
+        return <AssistantDirectorManager groupId={groupId}/>;
       case "Manage Group Notices & Circulars":
-        return <p>Static content for managing notices and circulars for Lab ID: <strong>{labId}</strong>.</p>;
+        return <p>Static content for managing notices and circulars for Lab ID: </p>;
       case "Manage Group Products & Achievements":
-        return <p>Static content for managing products and achievements for Lab ID: <strong>{labId}</strong>.</p>;
+        return <p>Static content for managing products and achievements for Lab ID: .</p>;
       case "Manage Members":
         return <p>Static content for managing users (not specific to any lab).</p>;
     //   case "Manage Groups":

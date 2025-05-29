@@ -61,7 +61,7 @@ function App() {
             <Route path="groups" element={<ManageGroups />} />
             <Route path="groups/:id" element={<GroupDetails />} />
           </Route>
-            <Route path="/admin/group/:id" element={<AdminGroupPanel />} />
+          <Route path="/admin/group/:id" element={<AdminGroupPanel />} />
         </Routes>
         <Footer />
       </div>
