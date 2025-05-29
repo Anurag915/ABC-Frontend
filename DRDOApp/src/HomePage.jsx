@@ -8,7 +8,7 @@ import NoticesAndCirculars from "./NoticesAndCirculars";
 import ProductsAndAdvertisements from "./ProductsAndAdvertisements";
 import OfficeOfDirector from "./OfficeOfDirector";
 import LabHistoryDetails from "./LabHistoryDetails";
-import LabManpowerList from "./LabManPowerList";
+import LabManpowerList from "./LabManpowerList";
 const labId = "6831e91d804bf498865b819d"; // Replace with the actual lab ID
 const sections = [
   "About Lab",
