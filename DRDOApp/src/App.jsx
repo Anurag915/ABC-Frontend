@@ -19,7 +19,7 @@ import ManageLabInfo from "./pages/ManageLabInfo";
 import AdminPanel from "./AdminPanel";
 import ManageNoticesCirculars from "./ManageNoticesCirculars";
 import ManageGroups from "./ManageGroups";
-
+import AdminGroupPanel from "./AdminGroupPanel";
 function App() {
   return (
     <Router>
@@ -61,6 +61,7 @@ function App() {
             <Route path="groups" element={<ManageGroups />} />
             <Route path="groups/:id" element={<GroupDetails />} />
           </Route>
+            <Route path="/admin/group/:id" element={<AdminGroupPanel />} />
         </Routes>
         <Footer />
       </div>
