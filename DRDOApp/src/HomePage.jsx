@@ -8,7 +8,7 @@ import NoticesAndCirculars from "./NoticesAndCirculars";
 import ProductsAndAdvertisements from "./ProductsAndAdvertisements";
 import OfficeOfDirector from "./OfficeOfDirector";
 import LabHistoryDetails from "./LabHistoryDetails";
-import LabManpowerList from "./LabManPowerList";
+import UserList from "./LabManPowerList";
 const labId = "6831e91d804bf498865b819d"; // Replace with the actual lab ID
 const sections = [
   "About Lab",
@@ -41,7 +41,7 @@ function HomePage() {
       case "Lab History":
         return <LabHistoryDetails labId={labId}/>;
       case "Personnel Details":
-        return <LabManpowerList labId={labId} />;
+        return <UserList labId={labId} />;
       case "Notices & Circular":
         return <NoticesAndCirculars labId={labId}/>;
       case "Product & Achievements":
