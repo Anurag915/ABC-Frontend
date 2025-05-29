@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 
 const apiUrl = import.meta.env.VITE_API_URL || "http://localhost:5000";
 
-export default function UserList() {
+export default function LabManpowerList() {
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
 
