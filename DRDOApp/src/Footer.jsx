@@ -6,7 +6,7 @@ const Footer = () => {
       <div className="mx-auto px-6 py-12 grid grid-cols-1 md:grid-cols-3 gap-12">
         {/* Organization Info */}
         <div>
-          <h2 className="text-3xl font-extrabold mb-4">ABC Company</h2>
+          <h2 className="text-3xl font-extrabold mb-4">Centre for Fire, Explosive and Environment Safety (CFEES)</h2>
           <p className="text-base opacity-90 leading-relaxed">
             Centre for Excellence in Education & Services — empowering research
             & innovation.
@@ -45,7 +45,7 @@ const Footer = () => {
             </li>
             <li>
               <Link
-                to="/publications"
+                to="/"
                 className="hover:underline hover:text-yellow-300 transition"
               >
                 Publications
@@ -59,12 +59,12 @@ const Footer = () => {
           <h3 className="text-2xl font-semibold mb-5 border-b border-yellow-300 pb-2">
             Contact Us
           </h3>
-          <p className="text-base opacity-90 mb-2">123 Innovation Street</p>
-          <p className="text-base opacity-90 mb-2">New Delhi, India</p>
+          <p className="text-base opacity-90 mb-2">Center for Fire, Explosive & Environment Safety Defence Research & Development Organisatio, Brig. S.K. Mazumdar Marg, Timarpur, Delhi-110054</p>
+          {/* <p className="text-base opacity-90 mb-2">New Delhi, India</p> */}
           <p className="text-base opacity-90 mb-2">
-            Email: info@abccompany.com
+            Email: director@cfees.deldom
           </p>
-          <p className="text-base opacity-90">Phone: +91-1234567890</p>
+          <p className="text-base opacity-90">Phone: 011-23813239</p>
         </div>
       </div>
 
