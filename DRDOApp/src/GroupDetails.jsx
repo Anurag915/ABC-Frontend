@@ -9,6 +9,8 @@ import GroupNoticesCirculars from "./GroupNoticesCirculars";
 import GroupEmployees from "./GroupEmployees";
 import AssistantDirectorsTable from "./AssistantDirectorsTable";
 import GroupHistory from "./GroupHistory";
+import OfficeOfGroupManager from "./OfficeOfGroupManager";
+import CurrentADCard from "./CurrentADCard";
 const sections = [
   "About Group",
   "Vision and Mission",
@@ -34,14 +36,9 @@ function GroupPage() {
         return <VisionMissionGroup groupId={id} />;
 
       case "Group Leader Profile":
-        return <GroupAD groupId={id} />;
+        return <CurrentADCard groupId={id} />;
       case "O/o Group Leader":
-        return (
-          <p>
-            The Office of the Group Leader oversees operations, strategic
-            direction, and collaborative efforts within the group.
-          </p>
-        );
+        return <OfficeOfGroupManager groupId={id}/>;
       case "Role & Honour":
         return <AssistantDirectorsTable groupId={id} />;
       case "Group History":

@@ -2,11 +2,15 @@ import { useState } from "react";
 import { useParams } from "react-router-dom";
 import GroupEditForm from "./GroupEditForm";
 import AssistantDirectorManager from "./AssistantDirectorManager";
+import ManageGroupNoticeCircular from "./ManageGroupNoticeCircular";
+import GroupFileManager from "./GroupFileManager";
+import ManageOffice from "./ManageOffice";
 const adminSections = [
   "Manage Groups",
   "Manage AssociateDirectors",
   "Manage Group Notices & Circulars",
   "Manage Group Products & Achievements",
+  "ManageOffice",
   "Manage Members",
 ];
 
@@ -17,17 +21,29 @@ export default function AdminGroupPanel() {
   const renderAdminContent = () => {
     switch (selectedSection) {
       case "Manage Groups":
-        return <GroupEditForm groupId={groupId}/>;
+        return <GroupEditForm groupId={groupId} />;
       case "Manage AssociateDirectors":
-        return <AssistantDirectorManager groupId={groupId}/>;
+        return <AssistantDirectorManager groupId={groupId} />;
       case "Manage Group Notices & Circulars":
-        return <p>Static content for managing notices and circulars for Lab ID: </p>;
+        return <ManageGroupNoticeCircular groupId={groupId} />;
+      case "ManageOffice":
+        return <ManageOffice groupId={groupId} />;
       case "Manage Group Products & Achievements":
-        return <p>Static content for managing products and achievements for Lab ID: .</p>;
+        return (
+          <>
+            <GroupFileManager groupId={groupId} field="projects" />
+            <GroupFileManager groupId={groupId} field="patents" />
+            <GroupFileManager groupId={groupId} field="technologies" />
+            <GroupFileManager groupId={groupId} field="courses" />
+            <GroupFileManager groupId={groupId} field="publications" />
+          </>
+        );
       case "Manage Members":
-        return <p>Static content for managing users (not specific to any lab).</p>;
-    //   case "Manage Groups":
-    //     return <p>Static content for managing groups related to Lab ID: <strong>{labId}</strong>.</p>;
+        return (
+          <p>Static content for managing users (not specific to any lab).</p>
+        );
+      //   case "Manage Groups":
+      //     return <p>Static content for managing groups related to Lab ID: <strong>{labId}</strong>.</p>;
       default:
         return <p>Select a section to manage.</p>;
     }
@@ -58,7 +74,9 @@ export default function AdminGroupPanel() {
           <h2 className="text-3xl font-extrabold text-amber-700 mb-6 border-b border-amber-300 pb-2">
             {selectedSection}
           </h2>
-          <div className="text-gray-700 leading-relaxed">{renderAdminContent()}</div>
+          <div className="text-gray-700 leading-relaxed">
+            {renderAdminContent()}
+          </div>
         </section>
       </main>
     </div>

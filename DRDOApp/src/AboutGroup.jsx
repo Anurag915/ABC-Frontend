@@ -11,6 +11,14 @@ function AboutGroup({ groupId }) {
       .catch((err) => console.error(err));
   }, [groupId]);
 
+  const renderPoints = (text) => {
+    if (!text) return ["No information available."];
+    return text
+      .split(/\n|•|-/)
+      .map((point) => point.trim())
+      .filter((point) => point.length > 0);
+  };
+
   if (!group)
     return (
       <div className="text-center text-gray-500 py-10 text-lg font-medium">
@@ -19,21 +27,28 @@ function AboutGroup({ groupId }) {
     );
 
   return (
-    <div className=" mx-auto p-6 bg-white rounded-lg shadow-md border border-gray-200">
+    <div className="mx-auto p-6 bg-white rounded-lg shadow-md border border-gray-200">
       <h1 className="text-4xl font-bold text-green-800 mb-4">{group.name}</h1>
+
       <section className="mb-6">
         <h2 className="text-xl font-semibold text-green-700 mb-2">About the Group</h2>
-        <p className="text-gray-700 leading-relaxed">{group.about || "No about information available."}</p>
+        <ul className="list-disc pl-6 text-gray-700 leading-relaxed space-y-1">
+          {renderPoints(group.about).map((point, index) => (
+            <li key={index}>{point}</li>
+          ))}
+        </ul>
       </section>
 
       {group.description && (
         <section className="mb-6">
           <h2 className="text-xl font-semibold text-green-700 mb-2">Description</h2>
-          <p className="text-gray-700 leading-relaxed">{group.description}</p>
+          <ul className="list-disc pl-6 text-gray-700 leading-relaxed space-y-1">
+            {renderPoints(group.description).map((point, index) => (
+              <li key={index}>{point}</li>
+            ))}
+          </ul>
         </section>
       )}
-
-      
     </div>
   );
 }

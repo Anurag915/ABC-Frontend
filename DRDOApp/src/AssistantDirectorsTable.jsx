@@ -9,7 +9,7 @@ const AssistantDirectorsTable = ({ groupId }) => {
     const fetchData = async () => {
       try {
         const res = await axios.get(`${apiUrl}/api/groups/${groupId}`);
-        setAssistantDirectors(res.data.assistantDirectors || []);
+        setAssistantDirectors(res.data.assistantDirectorHistory || []);
         setEmployees(res.data.employees || []);
       } catch (err) {
         console.error("Error fetching assistant directors:", err);

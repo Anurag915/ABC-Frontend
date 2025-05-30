@@ -95,7 +95,7 @@ const GroupEditForm = ({ groupId }) => {
   if (loading) return <div>Loading group data...</div>;
 
   return (
-    <div className="p-6 max-w-4xl mx-auto bg-white shadow rounded-xl">
+    <div className="p-6  mx-auto bg-white shadow rounded-xl">
       <h2 className="text-2xl font-bold mb-4">Edit Group Information</h2>
       <form onSubmit={handleSubmit} className="space-y-6">
         {/* Basic Fields */}
