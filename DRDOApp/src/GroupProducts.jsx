@@ -94,6 +94,7 @@ import {
 } from "lucide-react";
 
 const apiUri = import.meta.env.VITE_API_URL || "http://localhost:5000";
+import axiosInstance from './axiosInstance';
 
 const iconMap = {
   "Technologies Developed": <Lightbulb className="text-yellow-600 w-5 h-5" />,
@@ -115,7 +116,7 @@ const GroupProducts = ({ groupId }) => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const res = await axios.get(`${apiUri}/api/groups/${groupId}`);
+        const res = await axiosInstance.get(`/api/groups/id/${groupId}`);
         setData({
           technologies: res.data.technologies || [],
           patents: res.data.patents || [],

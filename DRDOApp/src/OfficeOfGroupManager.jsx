@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 const apiUrl = import.meta.env.VITE_API_URL || "http://localhost:5000";
+import axiosInstance from "./axiosInstance";
 
 const OfficeOfGroupManager = ({ groupId }) => {
   const [offices, setOffices] = useState([]);
@@ -10,7 +11,7 @@ const OfficeOfGroupManager = ({ groupId }) => {
   useEffect(() => {
     const fetchOffices = async () => {
       try {
-        const res = await axios.get(`${apiUrl}/api/groups/${groupId}`);
+        const res = await axiosInstance.get(`/api/groups/id/${groupId}`);
         setOffices(res.data.officeOfGroup || []);
       } catch (err) {
         console.error("Error fetching offices:", err);

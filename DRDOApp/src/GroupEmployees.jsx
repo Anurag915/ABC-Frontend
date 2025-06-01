@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { Users } from 'lucide-react';
+import axiosInstance from './axiosInstance';
 
 const apiUri = import.meta.env.VITE_API_URL || 'http://localhost:5000';
 
@@ -11,7 +12,7 @@ const GroupEmployees = ({ groupId }) => {
   useEffect(() => {
     const fetchEmployees = async () => {
       try {
-        const res = await axios.get(`${apiUri}/api/groups/${groupId}`);
+        const res = await axiosInstance.get(`/api/groups/id/${groupId}`);
         setEmployees(res.data.employees || []);
       } catch (err) {
         console.error('Failed to fetch employees:', err);

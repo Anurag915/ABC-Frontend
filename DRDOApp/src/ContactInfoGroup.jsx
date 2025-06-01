@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import axiosInstance from './axiosInstance';
+
 const apiUrl = import.meta.env.VITE_API_URL || "http://localhost:5000";
 const ContactInfoGroup = ({groupId}) => {
   const [contactInfo, setContactInfo] = useState([]);
@@ -11,7 +13,7 @@ const ContactInfoGroup = ({groupId}) => {
   useEffect(() => {
     const fetchContactInfo = async () => {
       try {
-        const res = await axios.get(`${apiUrl}/api/groups/${groupId}`);
+        const res = await axiosInstance.get(`/api/groups/id/${groupId}`);
         setContactInfo(res.data.contactInfo || []);
       } catch (err) {
         console.error(err);

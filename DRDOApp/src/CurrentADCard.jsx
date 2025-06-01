@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 const apiUrl = import.meta.env.VITE_API_URL || "http://localhost:5000";
+import axiosInstance from "./axiosInstance";
+
 const CurrentADCard = ({ groupId }) => {
   const [currentAD, setCurrentAD] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -10,8 +12,8 @@ const CurrentADCard = ({ groupId }) => {
     if (!groupId) return;
 
     setLoading(true);
-    axios
-      .get(`${apiUrl}/api/groups/${groupId}`)
+    axiosInstance
+      .get(`/api/groups/id/${groupId}`)
       .then((res) => {
         setCurrentAD(res.data.currentAD);
         setLoading(false);

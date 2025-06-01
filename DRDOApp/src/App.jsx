@@ -20,6 +20,8 @@ import AdminPanel from "./AdminPanel";
 import ManageNoticesCirculars from "./ManageNoticesCirculars";
 import ManageGroups from "./ManageGroups";
 import AdminGroupPanel from "./AdminGroupPanel";
+import ProtectedRoute from "./ProtectedRoute";
+import MyGroup from "./MyGroup";
 function App() {
   return (
     <Router>
@@ -33,7 +35,7 @@ function App() {
           <Route path="/" element={<HomePage />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
-          <Route path="/group/:id" element={<GroupDetails />} />
+          <Route path="/group/id/:id" element={<GroupDetails />} />
           <Route
             path="/add-group"
             element={
@@ -47,6 +49,24 @@ function App() {
           <Route path="/labs" element={<LabDetails />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="/directorprofile" element={<DirectorProfile />} />
+
+          <Route
+            path="/my-group"
+            element={
+              <ProtectedRoute>
+                <MyGroup />
+              </ProtectedRoute>
+            }
+          ></Route>
+          <Route
+            path="/group/id/:id"
+            element={
+              <ProtectedRoute>
+                <GroupDetails />
+              </ProtectedRoute>
+            }
+          />
+
           {/* Admin Routes */}
           <Route
             path="/admin"

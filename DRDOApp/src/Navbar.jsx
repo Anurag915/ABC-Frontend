@@ -45,9 +45,28 @@ export default function Navbar() {
       dropdown: true,
       items: groups.map((group) => ({
         label: group.name,
-        to: `/group/${group._id}`,
+        to: `/group/id/${group._id}`,
       })),
     },
+    // ...(isLoggedIn
+    //   ? [
+    //       userRole === "admin" && { label: "Admin Panel", to: "/admin" },
+    //       userRole === "admin" && {
+    //         label: "Manage Groups",
+    //         dropdown: true,
+    //         items: groups.map((group) => ({
+    //           label: group.name,
+    //           to: `/admin/group/${group._id}`,
+    //         })),
+    //       },
+    //       { label: "View Profile", to: "/profile" },
+    //       { label: "Sign Out", to: "#", action: handleLogout },
+    //     ].filter(Boolean)
+    //   : [
+    //       { label: "Login", to: "/login" },
+    //       { label: "Register", to: "/register" },
+    //     ]),
+
     ...(isLoggedIn
       ? [
           userRole === "admin" && { label: "Admin Panel", to: "/admin" },
@@ -58,6 +77,10 @@ export default function Navbar() {
               label: group.name,
               to: `/admin/group/${group._id}`,
             })),
+          },
+          userRole !== "admin" && {
+            label: "My Group",
+            to: "/my-group",
           },
           { label: "View Profile", to: "/profile" },
           { label: "Sign Out", to: "#", action: handleLogout },
@@ -94,7 +117,11 @@ export default function Navbar() {
                     }`}
                   >
                     {label}
-                    {openDropdown === label ? <FaChevronUp /> : <FaChevronDown />}
+                    {openDropdown === label ? (
+                      <FaChevronUp />
+                    ) : (
+                      <FaChevronDown />
+                    )}
                   </button>
                   {openDropdown === label && (
                     <div className="absolute bg-[#004b99] rounded-md mt-1 w-48 shadow-lg z-50">

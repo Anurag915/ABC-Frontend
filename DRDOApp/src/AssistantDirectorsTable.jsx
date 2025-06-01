@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+import axiosInstance from './axiosInstance';
 const AssistantDirectorsTable = ({ groupId }) => {
   const [assistantDirectors, setAssistantDirectors] = useState([]);
   const [employees, setEmployees] = useState([]);
@@ -8,7 +9,7 @@ const AssistantDirectorsTable = ({ groupId }) => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const res = await axios.get(`${apiUrl}/api/groups/${groupId}`);
+        const res = await axiosInstance.get(`/api/groups/id/${groupId}`);
         setAssistantDirectors(res.data.assistantDirectorHistory || []);
         setEmployees(res.data.employees || []);
       } catch (err) {
