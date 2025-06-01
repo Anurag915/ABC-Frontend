@@ -19,13 +19,22 @@ const Login = () => {
     try {
       const res = await axios.post(`${apiUrl}/api/auth/login`, form);
 
-      localStorage.setItem("token", res.data.token); // Save JWT token
-      localStorage.setItem("user", JSON.stringify(res.data.user)); // ✅ This line is critical
-      localStorage.setItem("role", res.data.user.role); // optional
-      localStorage.setItem("userId", res.data.user._id); // ✅ Store the user ID
+      const user = res.data.user;
+      localStorage.setItem("token", res.data.token);
+      localStorage.setItem("user", JSON.stringify(user));
+      localStorage.setItem("role", user.role);
+      localStorage.setItem("userId", user._id);
 
-      alert("Login successful!");
-      navigate("/"); // Redirect to home page
+      if (user.role === "pending_director") {
+        alert(
+          "Your director account is pending approval. Please wait for admin approval."
+        );
+        // Optionally redirect to a "Pending Approval" page or back to login
+        navigate("/pending-approval"); // create this route or redirect wherever you want
+      } else {
+        alert("Login successful!");
+        navigate("/"); // Normal redirect
+      }
     } catch (err) {
       alert(err.response?.data?.message || "Login failed.");
     } finally {

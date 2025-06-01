@@ -70,6 +70,7 @@ export default function Navbar() {
     ...(isLoggedIn
       ? [
           userRole === "admin" && { label: "Admin Panel", to: "/admin" },
+          userRole === "admin" && { label: "Approval Users", to: "/admin/approval" },
           userRole === "admin" && {
             label: "Manage Groups",
             dropdown: true,
@@ -78,10 +79,11 @@ export default function Navbar() {
               to: `/admin/group/${group._id}`,
             })),
           },
-          userRole !== "admin" && {
-            label: "My Group",
-            to: "/my-group",
-          },
+
+          // userRole !== "admin" && {
+          //   label: "My Group",
+          //   to: "/my-group",
+          // },
           { label: "View Profile", to: "/profile" },
           { label: "Sign Out", to: "#", action: handleLogout },
         ].filter(Boolean)

@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 
 const Footer = () => {
   return (
-    <footer className="bg-[#05659e] text-white mt-16">
+    <footer className="bg-[#05659e] text-white ">
       <div className="mx-auto px-6 py-12 grid grid-cols-1 md:grid-cols-3 gap-12">
         {/* Organization Info */}
         <div>
