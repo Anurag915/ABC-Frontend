@@ -21,7 +21,7 @@ const GroupEditForm = ({ groupId }) => {
     const fetchGroup = async () => {
       try {
         const token = localStorage.getItem("token");
-        const res = await axios.get(`${apiUrl}/api/groups/${groupId}`, {
+        const res = await axios.get(`${apiUrl}/api/groups/id/${groupId}`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },

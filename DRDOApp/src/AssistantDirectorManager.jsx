@@ -27,7 +27,13 @@ function AssistantDirectorManager({ groupId }) {
 
   const fetchUsers = async () => {
     try {
+      const token = localStorage.getItem("token");
       const res = await axios.get(`${apiUrl}/api/users`);
+      // const res = await axios.get(`${apiUrl}/api/users`, {
+      //   headers: {
+      //     Authorization: `Bearer ${token}`,
+      //   },
+      // });
       setUsers(res.data || []);
     } catch (err) {
       console.error("Failed loading users", err);
@@ -37,7 +43,13 @@ function AssistantDirectorManager({ groupId }) {
   const fetchHistory = async () => {
     setLoading(true);
     try {
-      const { data: group } = await axios.get(`${apiUrl}/api/groups/${groupId}`);
+      const token = localStorage.getItem("token");
+      // const { data: group } = await axios.get(`${apiUrl}/api/groups/id/${groupId}`);
+      const { data: group }  = await axios.get(`${apiUrl}/api/groups/id/${groupId}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
       setHistory(Array.isArray(group.assistantDirectorHistory)
         ? group.assistantDirectorHistory
         : []);
@@ -133,8 +145,8 @@ function AssistantDirectorManager({ groupId }) {
       user: entry.user?._id || "",
       name: entry.user ? "" : entry.name || "",
       designation: entry.designation,
-      from: entry.from?.slice(0,10) || "",
-      to: entry.to?.slice(0,10) || "",
+      from: entry.from?.slice(0, 10) || "",
+      to: entry.to?.slice(0, 10) || "",
       about: entry.about || "",
       imageFile: null,
     });
@@ -142,18 +154,18 @@ function AssistantDirectorManager({ groupId }) {
   };
 
   return (
-    <div style={{  margin:"auto", padding:20, fontFamily:"Arial" }}>
-      <h2 style={{ textAlign:"center" }}>Associate Director Management</h2>
+    <div style={{ margin: "auto", padding: 20, fontFamily: "Arial" }}>
+      <h2 style={{ textAlign: "center" }}>Associate Director Management</h2>
 
       <form onSubmit={handleSubmit}
-            style={{ marginBottom:30, padding:20, border:"1px solid #ddd", borderRadius:6, backgroundColor:"#f9f9f9" }}>
+        style={{ marginBottom: 30, padding: 20, border: "1px solid #ddd", borderRadius: 6, backgroundColor: "#f9f9f9" }}>
         <h3>{editing ? "Edit" : "Add New"}</h3>
 
         {/* User dropdown */}
-        <div style={{ marginBottom:12 }}>
+        <div style={{ marginBottom: 12 }}>
           <label>Select User (or leave blank to enter name):</label>
           <select name="user" value={formData.user} onChange={handleChange}
-                  style={{ width:"100%", padding:8, marginTop:4 }}>
+            style={{ width: "100%", padding: 8, marginTop: 4 }}>
             <option value="">-- None --</option>
             {users.map(u => (
               <option key={u._id} value={u._id}>
@@ -165,61 +177,61 @@ function AssistantDirectorManager({ groupId }) {
 
         {/* Manual name when no user */}
         {!formData.user && (
-          <div style={{ marginBottom:12 }}>
+          <div style={{ marginBottom: 12 }}>
             <label>Manual Name:</label>
             <input type="text" name="name" value={formData.name}
-                   onChange={handleChange} placeholder="Assistant Director Name"
-                   style={{ width:"100%", padding:8, marginTop:4 }} required />
+              onChange={handleChange} placeholder="Assistant Director Name"
+              style={{ width: "100%", padding: 8, marginTop: 4 }} required />
           </div>
         )}
 
         {/* Designation */}
-        <div style={{ marginBottom:12 }}>
+        <div style={{ marginBottom: 12 }}>
           <label>Designation:</label>
           <input type="text" name="designation" value={formData.designation}
-                 onChange={handleChange}
-                 style={{ width:"100%", padding:8, marginTop:4 }} />
+            onChange={handleChange}
+            style={{ width: "100%", padding: 8, marginTop: 4 }} />
         </div>
 
         {/* Dates */}
-        <div style={{ display:"flex", gap:12, marginBottom:12 }}>
-          <div style={{ flex:1 }}>
+        <div style={{ display: "flex", gap: 12, marginBottom: 12 }}>
+          <div style={{ flex: 1 }}>
             <label>From:</label>
             <input type="date" name="from" value={formData.from}
-                   onChange={handleChange} required
-                   style={{ width:"100%", padding:8, marginTop:4 }} />
+              onChange={handleChange} required
+              style={{ width: "100%", padding: 8, marginTop: 4 }} />
           </div>
-          <div style={{ flex:1 }}>
+          <div style={{ flex: 1 }}>
             <label>To (blank if current):</label>
             <input type="date" name="to" value={formData.to}
-                   onChange={handleChange}
-                   style={{ width:"100%", padding:8, marginTop:4 }} />
+              onChange={handleChange}
+              style={{ width: "100%", padding: 8, marginTop: 4 }} />
           </div>
         </div>
 
         {/* About */}
-        <div style={{ marginBottom:12 }}>
+        <div style={{ marginBottom: 12 }}>
           <label>About:</label>
           <textarea name="about" value={formData.about}
-                    onChange={handleChange} rows={3}
-                    style={{ width:"100%", padding:8, marginTop:4 }} />
+            onChange={handleChange} rows={3}
+            style={{ width: "100%", padding: 8, marginTop: 4 }} />
         </div>
 
         {/* Image */}
-        <div style={{ marginBottom:12 }}>
+        <div style={{ marginBottom: 12 }}>
           <label>Upload Image:</label>
           <input type="file" name="imageFile" accept="image/*" onChange={handleChange} />
         </div>
 
         {/* Submit */}
-        <div style={{ display:"flex", gap:12 }}>
+        <div style={{ display: "flex", gap: 12 }}>
           <button type="submit"
-                  style={{ flex:1, padding:"10px 20px", backgroundColor:"#4CAF50", color:"white", border:"none", borderRadius:4 }}>
+            style={{ flex: 1, padding: "10px 20px", backgroundColor: "#4CAF50", color: "white", border: "none", borderRadius: 4 }}>
             {editing ? "Update" : "Add"}
           </button>
           {editing && (
             <button type="button" onClick={resetForm}
-                    style={{ flex:1, padding:"10px 20px", backgroundColor:"#f44336", color:"white", border:"none", borderRadius:4 }}>
+              style={{ flex: 1, padding: "10px 20px", backgroundColor: "#f44336", color: "white", border: "none", borderRadius: 4 }}>
               Cancel
             </button>
           )}
@@ -230,29 +242,29 @@ function AssistantDirectorManager({ groupId }) {
 
       <h3>Existing Entries</h3>
       {loading && <p>Loading…</p>}
-      {error && <p style={{color:"red"}}>{error}</p>}
+      {error && <p style={{ color: "red" }}>{error}</p>}
       {!loading && history.length === 0 && <p>No entries found.</p>}
 
-      <ul style={{ listStyle:"none", padding:0 }}>
+      <ul style={{ listStyle: "none", padding: 0 }}>
         {history.map(entry => (
           <li key={entry._id}
-              style={{ border:"1px solid #ddd", borderRadius:6, padding:15, marginBottom:15, display:"flex", gap:15 }}>
+            style={{ border: "1px solid #ddd", borderRadius: 6, padding: 15, marginBottom: 15, display: "flex", gap: 15 }}>
             {/* <img src={entry.image || "/default-user.png"} alt=""
                  style={{ width:80, height:80, borderRadius:"50%", objectFit:"cover" }} /> */}
-            <div style={{ flex:1 }}>
+            <div style={{ flex: 1 }}>
               <h4>{entry.user?.name || entry.name || "Unnamed"}</h4>
               <p><strong>Designation:</strong> {entry.designation}</p>
-              <p><strong>From:</strong> {new Date(entry.from).toLocaleDateString()} 
-                 <strong> To:</strong> {entry.to ? new Date(entry.to).toLocaleDateString() : "Present"}</p>
+              <p><strong>From:</strong> {new Date(entry.from).toLocaleDateString()}
+                <strong> To:</strong> {entry.to ? new Date(entry.to).toLocaleDateString() : "Present"}</p>
               <p>{entry.about}</p>
             </div>
-            <div style={{ display:"flex", flexDirection:"column", gap:10 }}>
+            <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
               <button onClick={() => startEditing(entry)}
-                      style={{ backgroundColor:"#2196F3", color:"white", border:"none", padding:"6px 12px", borderRadius:4 }}>
+                style={{ backgroundColor: "#2196F3", color: "white", border: "none", padding: "6px 12px", borderRadius: 4 }}>
                 Edit
               </button>
               <button onClick={() => handleDelete(entry._id)}
-                      style={{ backgroundColor:"#f44336", color:"white", border:"none", padding:"6px 12px", borderRadius:4 }}>
+                style={{ backgroundColor: "#f44336", color: "white", border: "none", padding: "6px 12px", borderRadius: 4 }}>
                 Delete
               </button>
             </div>

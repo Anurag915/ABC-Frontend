@@ -27,7 +27,7 @@ export default function ManageGroupNoticeCircular({ groupId }) {
     setError("");
     try {
       const { data: group } = await axios.get(
-        `${apiUrl}/api/groups/${groupId}`,
+        `${apiUrl}/api/groups/id/${groupId}`,
         { headers: authHeader() }
       );
       setItems(group[tab] || []);

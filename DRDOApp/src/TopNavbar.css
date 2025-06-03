@@ -1,9 +1,20 @@
 .top-navbar {
   position: fixed;
-  top: 40px; /* exactly the marquee’s 40px */
+  top: 40px;
+  /* below marquee */
   left: 0;
   width: 100%;
-  height: 50px; /* YOU control this */
+  height: 60px;
+  /* ↓ Reduced from 95px */
   z-index: 1025;
-  bottom: 10px;
+  min-height: 60px;
+  max-height: 90px;
+  overflow: hidden;
+}
+
+
+.top-navbar span {
+  font-size: clamp(0.8rem, 1vw, 1.2rem);
+  /* responsive font */
+  line-height: 1.2;
 }

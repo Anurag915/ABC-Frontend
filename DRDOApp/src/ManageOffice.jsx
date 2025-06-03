@@ -13,7 +13,7 @@ function ManageOffice({ groupId }) {
   }, [groupId]);
 
   const fetchGroup = async () => {
-    const res = await fetch(`${apiUrl}/api/groups/${groupId}`);
+    const res = await fetch(`${apiUrl}/api/groups/id/${groupId}`);
     const data = await res.json();
     setGroup(data);
   };

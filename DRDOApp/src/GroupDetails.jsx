@@ -48,7 +48,7 @@ function GroupPage() {
           (emp) => String(emp._id) === String(userId)
         );
 
-        if (role === "director" || isMember) {
+        if (role === "director" || role === "admin" || isMember) {
           setGroup(res.data);
         } else {
           setUnauthorized(true);
@@ -94,18 +94,17 @@ function GroupPage() {
   };
 
   return (
-    <div className="bg-gray-50 font-sans text-black mt-8">
+    <div className="bg-gray-50 font-sans text-black mt-14">
       <main className="flex flex-col md:flex-row mx-auto shadow-lg rounded-lg bg-white">
         <aside className="w-full md:w-1/4 bg-green-100 p-6 space-y-4 rounded-l-lg border-r border-green-300 shadow-inner">
           {sections.map((section) => (
             <button
               key={section}
               onClick={() => setSelectedSection(section)}
-              className={`w-full text-left px-4 py-3 rounded-lg font-semibold transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-green-500 ${
-                selectedSection === section
+              className={`w-full text-left px-4 py-3 rounded-lg font-semibold transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-green-500 ${selectedSection === section
                   ? "bg-green-600 text-white shadow-md"
                   : "bg-white text-green-800 hover:bg-green-300"
-              }`}
+                }`}
               aria-current={selectedSection === section ? "page" : undefined}
             >
               {section}

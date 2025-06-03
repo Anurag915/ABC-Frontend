@@ -7,6 +7,7 @@ nav {
   z-index: 1100; /* Above the marquee */
   background-color: #003168;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  /* height: 95px; */
 }
 
 .navbar-container {
@@ -35,11 +36,34 @@ nav {
 }
 
 /* ONLY hits your main Navbar */
-.main-navbar {
+/* .main-navbar {
   position: fixed;
-
-  top: 96px;
+  top: 135px;
   left: 0;
   width: 100%;
   z-index: 1050;
+} */
+
+
+.main-navbar {
+  position: fixed;
+  /* top: 95px; 40px (marquee) + 60px (top-navbar) */
+  left: 0;
+  width: 100%;
+  z-index: 1050;
+}
+.logo {
+  height: 2rem;
+}
+
+@media (min-width: 768px) {
+  .logo {
+    height: 2.5rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .logo {
+    height: 3rem;
+  }
 }

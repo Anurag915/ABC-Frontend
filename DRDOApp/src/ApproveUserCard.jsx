@@ -65,12 +65,21 @@ const ApproveUserCard = () => {
     }
   };
 
-  if (loading) return <p className="text-center mt-10 text-gray-600">Loading...</p>;
+  if (loading) return <p className="text-center mt-14 text-gray-600">Loading...</p>;
+  // if (pendingUsers.length === 0)
+  //   return <p className="text-center mt-10 text-gray-500 text-lg">No pending users found ✅</p>;
   if (pendingUsers.length === 0)
-    return <p className="text-center mt-10 text-gray-500 text-lg">No pending users found ✅</p>;
+  return (
+    <div className="mt-24 sm:mt-20 px-4">
+      <p className="text-center text-gray-500 text-base sm:text-lg">
+        No pending users found ✅
+      </p>
+    </div>
+  );
+
 
   return (
-    <div className="p-6  mx-auto">
+    <div className="mt-14 p-6  mx-auto">
       <h2 className="text-3xl font-bold mb-6 text-center text-blue-800">Pending User Approvals</h2>
 
       <div className="grid gap-6 sm:grid-cols-1 md:grid-cols-2">

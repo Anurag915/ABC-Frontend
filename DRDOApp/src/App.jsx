@@ -23,6 +23,7 @@ import AdminGroupPanel from "./AdminGroupPanel";
 import ProtectedRoute from "./ProtectedRoute";
 import ApproveUserCard from "./ApproveUserCard";
 import MyGroup from "./MyGroup";
+import AdminLogs from "./AdminLogs";
 // function App() {
 //   return (
 //     <Router>
@@ -153,6 +154,14 @@ function App() {
                 </RequireAdmin>
               }
             />
+              <Route
+              path="/admin/logs"
+              element={
+                <RequireAdmin>
+                  <AdminLogs />
+                </RequireAdmin>
+              }
+            ></Route>
             <Route
               path="/admin"
               element={
