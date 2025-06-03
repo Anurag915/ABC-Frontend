@@ -24,81 +24,8 @@ import ProtectedRoute from "./ProtectedRoute";
 import ApproveUserCard from "./ApproveUserCard";
 import MyGroup from "./MyGroup";
 import AdminLogs from "./AdminLogs";
-// function App() {
-//   return (
-//     <Router>
-//       {/* Fixed Top Marquee */}
-//       <DocumentMarquee />
-//       <TopNavbar />
-//       <Navbar />
-//       <div style={{ marginTop: "180px" }}>
-//         {/* Main content starts after marquee (40px) + navbar (50px) = ~90px */}
-//         <Routes>
-//           <Route path="/" element={<HomePage />} />
-//           <Route path="/login" element={<Login />} />
-//           <Route path="/register" element={<Register />} />
-//           <Route path="/group/id/:id" element={<GroupDetails />} />
-//           <Route
-//             path="/add-group"
-//             element={
-//               <RequireAdmin>
-//                 <AddGroup />
-//               </RequireAdmin>
-//             }
-//           />
-//           <Route path="/employees" element={<UserList />} />
-//           <Route path="/groups/:id/edit" element={<EditGroup />} />
-//           <Route path="/labs" element={<LabDetails />} />
-//           <Route path="/profile" element={<Profile />} />
-//           <Route path="/directorprofile" element={<DirectorProfile />} />
-
-//           <Route
-//             path="/my-group"
-//             element={
-//               <ProtectedRoute>
-//                 <MyGroup />
-//               </ProtectedRoute>
-//             }
-//           ></Route>
-//           <Route
-//             path="/group/id/:id"
-//             element={
-//               <ProtectedRoute>
-//                 <GroupDetails />
-//               </ProtectedRoute>
-//             }
-//           />
-//           <Route
-//             path="/admin/approval"
-//             element={
-//               <RequireAdmin>
-//                 <ApproveUserCard />
-//               </RequireAdmin>
-//             }
-//           ></Route>
-//           {/* Admin Routes */}
-//           <Route
-//             path="/admin"
-//             element={
-//               <RequireAdmin>
-//                 <AdminPanel />
-//               </RequireAdmin>
-//             }
-//           >
-//             <Route path="manage-lab" element={<ManageLabInfo />} />
-//             <Route path="manage" element={<ManageNoticesCirculars />} />
-//             {/* <Route path="groups" element={<ManageGroups />} /> */}
-//             <Route path="groups/:id" element={<GroupDetails />} />
-//             {/* <Route path="approval" element={<ApproveUserCard />} /> */}
-//           </Route>
-//           <Route path="/admin/group/:id" element={<AdminGroupPanel />} />
-//         </Routes>
-//         <Footer />
-//       </div>
-//     </Router>
-//   );
-// }
-
+import CloseGroupManager from "./CloseGroupManager";
+import UserCloseGroupDocs from "./UserCloseGroupDocs";
 
 function App() {
   return (
@@ -129,6 +56,7 @@ function App() {
             <Route path="/groups/:id/edit" element={<EditGroup />} />
             <Route path="/labs" element={<LabDetails />} />
             <Route path="/profile" element={<Profile />} />
+            <Route path="/closeGroup" element={<UserCloseGroupDocs />} />
             <Route path="/directorprofile" element={<DirectorProfile />} />
             <Route
               path="/my-group"
@@ -154,11 +82,19 @@ function App() {
                 </RequireAdmin>
               }
             />
-              <Route
+            <Route
               path="/admin/logs"
               element={
                 <RequireAdmin>
                   <AdminLogs />
+                </RequireAdmin>
+              }
+            ></Route>
+            <Route
+              path="/admin/closeGroup"
+              element={
+                <RequireAdmin>
+                  <CloseGroupManager />
                 </RequireAdmin>
               }
             ></Route>

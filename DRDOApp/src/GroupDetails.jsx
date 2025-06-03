@@ -34,11 +34,15 @@ function GroupPage() {
   const [unauthorized, setUnauthorized] = useState(false);
 
   useEffect(() => {
+    setLoading(true);
+    setUnauthorized(false); // reset unauthorized state
+    setGroup(null); // reset group state
+
     async function fetchGroup() {
       try {
         const token = localStorage.getItem("token");
         const userId = localStorage.getItem("userId");
-        const role = localStorage.getItem("role"); // 👈 Make sure this is set at login
+        const role = localStorage.getItem("role");
 
         const res = await axios.get(`${apiUrl}/api/groups/id/${id}`, {
           headers: { Authorization: `Bearer ${token}` },
@@ -64,7 +68,21 @@ function GroupPage() {
   }, [id]);
 
   if (loading) return <p>Loading group data...</p>;
-  if (unauthorized) return <Navigate to="/" replace />;
+  if (unauthorized) {
+    return (
+      <div className="flex items-center justify-center h-screen bg-gray-100">
+        <div className="bg-white p-8 rounded shadow-md text-center">
+          <h2 className="text-2xl font-bold text-red-600 mb-4">
+            Access Denied
+          </h2>
+          <p className="text-gray-700">
+            You are not authorized to view this group. You are not a member of
+            this group.
+          </p>
+        </div>
+      </div>
+    );
+  }
 
   const renderContent = () => {
     switch (selectedSection) {
@@ -101,10 +119,11 @@ function GroupPage() {
             <button
               key={section}
               onClick={() => setSelectedSection(section)}
-              className={`w-full text-left px-4 py-3 rounded-lg font-semibold transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-green-500 ${selectedSection === section
+              className={`w-full text-left px-4 py-3 rounded-lg font-semibold transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-green-500 ${
+                selectedSection === section
                   ? "bg-green-600 text-white shadow-md"
                   : "bg-white text-green-800 hover:bg-green-300"
-                }`}
+              }`}
               aria-current={selectedSection === section ? "page" : undefined}
             >
               {section}

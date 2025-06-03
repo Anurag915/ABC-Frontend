@@ -74,13 +74,22 @@ export default function Navbar() {
               to: `/admin/group/${group._id}`,
             })),
           },
-          userRole === "admin" && { label: "Approval Users", to: "/admin/approval" },
+          userRole === "admin" && {
+            label: "Manage Close Group",
+            to: "/admin/closeGroup",
+          },
+          userRole === "admin" && {
+            label: "Approve Users",
+            to: "/admin/approval",
+          },
           userRole === "admin" && { label: "Logs", to: "/admin/logs" },
+          { label: "Close Group Docs", to: "/closeGroup" },
           { label: "View Profile", to: "/profile" },
           { label: "Sign Out", to: "#", action: handleLogout },
         ].filter(Boolean)
       : [
           { label: "Login", to: "/login" },
+
           // { label: "Register", to: "/register" },
         ]),
   ];
@@ -105,7 +114,9 @@ export default function Navbar() {
                 <div key={label} className="relative">
                   <button
                     onClick={() => {
-                      setOpenDropdown((prev) => (prev === label ? null : label));
+                      setOpenDropdown((prev) =>
+                        prev === label ? null : label
+                      );
                       setOpenMobileDropdown(null);
                     }}
                     className={`px-4 py-2 rounded-md text-base font-medium flex items-center gap-1 transition duration-300 ${
@@ -115,7 +126,11 @@ export default function Navbar() {
                     }`}
                   >
                     {label}
-                    {openDropdown === label ? <FaChevronUp /> : <FaChevronDown />}
+                    {openDropdown === label ? (
+                      <FaChevronUp />
+                    ) : (
+                      <FaChevronDown />
+                    )}
                   </button>
                   {openDropdown === label && (
                     <div className="absolute bg-[#004b99] rounded-md mt-1 w-48 shadow-lg z-50">
@@ -190,7 +205,11 @@ export default function Navbar() {
                       }`}
                     >
                       {label}
-                      {openMobileDropdown === label ? <FaChevronUp /> : <FaChevronDown />}
+                      {openMobileDropdown === label ? (
+                        <FaChevronUp />
+                      ) : (
+                        <FaChevronDown />
+                      )}
                     </button>
                     {openMobileDropdown === label && (
                       <div className="pl-6 mt-1 space-y-1">
