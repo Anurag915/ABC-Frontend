@@ -3,7 +3,11 @@ import axios from "axios";
 import { FileText, User, Briefcase, Info, Link, Calendar } from "lucide-react"; // Import more icons for better visual cues
 
 const apiUri = import.meta.env.VITE_API_URL;
-
+const designationOptions = {
+  DRDS: ["Scientist 'B'", "Scientist 'C'", "Scientist 'D'"],
+  DRTC: ["Technical Officer 'A'", "Technical Officer 'B'"],
+  Admin: ["Admin Officer", "Store Officer"],
+};
 const Profile = () => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -145,6 +149,18 @@ const Profile = () => {
 
   const handleEditClick = () => setEditMode(true);
 
+  const handleCadreChange = (e) => {
+    const cadre = e.target.value;
+    setFormData((prev) => ({
+      ...prev,
+      professionalDetails: {
+        ...prev.professionalDetails,
+        cadre,
+        designation: "",
+      },
+    }));
+  };
+
   const handleSaveProfile = async () => {
     try {
       const res = await axios.put(
@@ -206,8 +222,16 @@ const Profile = () => {
   };
 
   // Helper to update nested professionalDetails inputs
+  // const updateProfessional = (field, value) => {
+  //   setEditProfessional((prev) => ({ ...prev, [field]: value }));
+  // };
+
   const updateProfessional = (field, value) => {
-    setEditProfessional((prev) => ({ ...prev, [field]: value }));
+    setEditProfessional((prev) => ({
+      ...prev,
+      [field]: value,
+      ...(field === "cadre" ? { designation: "" } : {}),
+    }));
   };
 
   // Update social links helper
@@ -222,8 +246,9 @@ const Profile = () => {
         <div className="flex flex-col md:flex-row justify-between items-center mb-10 pb-6 border-b border-gray-200">
           <div>
             <h2 className="text-4xl font-extrabold text-[#003168] mb-2 leading-tight">
-              Hello, {user.personalDetails.name || "User"}!
+              Hello, {user?.personalDetails?.name || "User"}!
             </h2>
+
             <p className="text-gray-600 text-xl">
               Welcome to your personalized dashboard.
             </p>
@@ -353,7 +378,10 @@ const Profile = () => {
                   label="Emergency Contact Relation"
                   value={editPersonal.emergencyContact.relation}
                   onChange={(e) =>
-                    updatePersonal("emergencyContact.relationship", e.target.value)
+                    updatePersonal(
+                      "emergencyContact.relationship",
+                      e.target.value
+                    )
                   }
                 />
                 <InputField
@@ -367,34 +395,38 @@ const Profile = () => {
             </div>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-3 text-gray-700 text-lg">
-              <ProfileDetail label="Name" value={user.personalDetails.name} />
+              <ProfileDetail
+                label="Name"
+                value={user?.personalDetails?.name || "N/A"}
+              />
               <ProfileDetail
                 label="Date of Birth"
                 value={
-                  user.personalDetails.dob
+                  user?.personalDetails?.dob
                     ? new Date(user.personalDetails.dob).toLocaleDateString()
                     : "N/A"
                 }
               />
+
               <ProfileDetail
                 label="Mobile"
-                value={user.personalDetails.mobile}
+                value={user?.personalDetails?.mobile || "N/A"}
               />
               <ProfileDetail
                 label="Address"
-                value={user.personalDetails.address}
+                value={user?.personalDetails?.address || "N/A"}
               />
               <ProfileDetail
                 label="Gender"
-                value={user.personalDetails.gender}
+                value={user?.personalDetails?.gender || "N/A"}
               />
               <ProfileDetail
-                label="Blood Groupt"
-                value={user.personalDetails.bloodGroup}
+                label="Blood Group"
+                value={user?.personalDetails?.bloodGroup || "N/A"}
               />
               <ProfileDetail
                 label="Marital Status"
-                value={user.personalDetails.maritalStatus}
+                value={user?.personalDetails?.maritalStatus || "N/A"}
               />
               <div className="md:col-span-2 pt-4 mt-4 border-t border-blue-200">
                 <p className="font-semibold text-gray-800 mb-2">
@@ -403,15 +435,16 @@ const Profile = () => {
                 <ul className="ml-5 list-disc text-gray-600">
                   <li>
                     <strong>Name:</strong>{" "}
-                    {user.personalDetails.emergencyContact?.name || "N/A"}
+                    {user?.personalDetails?.emergencyContact?.name || "N/A"}
                   </li>
                   <li>
                     <strong>Relation:</strong>{" "}
-                    {user.personalDetails.emergencyContact?.relationship || "N/A"}
+                    {user?.personalDetails?.emergencyContact?.relationship ||
+                      "N/A"}
                   </li>
                   <li>
                     <strong>Phone:</strong>{" "}
-                    {user.personalDetails.emergencyContact?.mobile || "N/A"}
+                    {user?.personalDetails?.emergencyContact?.mobile || "N/A"}
                   </li>
                 </ul>
               </div>
@@ -427,14 +460,14 @@ const Profile = () => {
 
           {editMode ? (
             <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-              <InputField
+              {/* <InputField
                 label="Designation"
                 value={editProfessional.designation}
                 onChange={(e) =>
                   updateProfessional("designation", e.target.value)
                 }
-              />
-              <SelectField
+              /> */}
+              {/* <SelectField
                 label="Cadre"
                 value={editProfessional.cadre}
                 onChange={(e) => updateProfessional("cadre", e.target.value)}
@@ -445,7 +478,62 @@ const Profile = () => {
                   { value: "Admin", label: "Admin" },
                   { value: "Other", label: "Other" },
                 ]}
-              />
+              /> */}
+              {/* <select
+                value={editProfessional.cadre}
+                onChange={(e) => updateProfessional("cadre", e.target.value)}
+              >
+                <option value="">Select Cadre</option>
+                <option value="DRDS">DRDS</option>
+                <option value="DRTC">DRTC</option>
+                <option value="Admin">Admin</option>
+                <option value="Other">Other</option>
+              </select> */}
+              {/* Cadre Select */}
+              <select
+                value={editProfessional.cadre}
+                onChange={(e) => updateProfessional("cadre", e.target.value)}
+                className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-300 transition"
+              >
+                <option value="">Select Cadre</option>
+                <option value="DRDS">DRDS</option>
+                <option value="DRTC">DRTC</option>
+                <option value="Admin">Admin</option>
+                <option value="Other">Other</option>
+              </select>
+
+              {/* Dynamic Designation Select/Input */}
+              {editProfessional.cadre &&
+                editProfessional.cadre !== "Other" &&
+                designationOptions[editProfessional.cadre] && (
+                  <select
+                    value={editProfessional.designation}
+                    onChange={(e) =>
+                      updateProfessional("designation", e.target.value)
+                    }
+                    className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-300 transition "
+                  >
+                    <option value="">Select Designation</option>
+                    {designationOptions[editProfessional.cadre].map((desig) => (
+                      <option key={desig} value={desig}>
+                        {desig}
+                      </option>
+                    ))}
+                  </select>
+                )}
+
+              {editProfessional.cadre === "Other" && (
+                <input
+                  type="text"
+                  value={editProfessional.designation}
+                  onChange={(e) =>
+                    updateProfessional("designation", e.target.value)
+                  }
+                  placeholder="Enter Designation"
+                  className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-300 transition mt-3"
+                />
+              )}
+
               <InputField
                 label="Intercom"
                 value={editProfessional.intercom}
@@ -502,33 +590,36 @@ const Profile = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-3 text-gray-700 text-lg">
               <ProfileDetail
                 label="Designation"
-                value={user.professionalDetails.designation}
+                value={user?.professionalDetails?.designation || "N/A"}
               />
               <ProfileDetail
                 label="Cadre"
-                value={user.professionalDetails.cadre}
+                value={user?.professionalDetails?.cadre || "N/A"}
               />
               <ProfileDetail
                 label="Intercom"
-                value={user.professionalDetails.intercom}
+                value={user?.professionalDetails?.intercom || "N/A"}
               />
               <ProfileDetail
                 label="Internet Email"
-                value={user.professionalDetails.internetEmail}
+                value={user?.professionalDetails?.internetEmail || "N/A"}
               />
               <ProfileDetail
                 label="DRONA Email"
-                value={user.professionalDetails.dronaEmail}
+                value={user?.professionalDetails?.dronaEmail || "N/A"}
               />
-              <ProfileDetail label="PIS" value={user.professionalDetails.pis} />
+              <ProfileDetail
+                label="PIS"
+                value={user?.professionalDetails?.pis || "N/A"}
+              />
               <ProfileDetail
                 label="AEBAS ID"
-                value={user.professionalDetails.aebasId}
+                value={user?.professionalDetails?.aebasId || "N/A"}
               />
               <ProfileDetail
                 label="Joining Date"
                 value={
-                  user.professionalDetails.joiningDate
+                  user?.professionalDetails?.joiningDate
                     ? new Date(
                         user.professionalDetails.joiningDate
                       ).toLocaleDateString()
@@ -538,7 +629,9 @@ const Profile = () => {
               <ProfileDetail
                 label="Skills"
                 value={
-                  (user.professionalDetails.skills || []).join(", ") || "N/A"
+                  (user?.professionalDetails?.skills || []).length > 0
+                    ? user.professionalDetails.skills.join(", ")
+                    : "N/A"
                 }
                 className="md:col-span-2"
               />
@@ -560,13 +653,13 @@ const Profile = () => {
             />
           ) : (
             <p className="text-gray-700 text-lg leading-relaxed">
-              {user.about || "No description provided."}
+              {user?.about || "No description provided."}
             </p>
           )}
         </section>
 
         {/* Employment Period */}
-        <section className="bg-blue-50 p-6 rounded-xl shadow-md border border-blue-100 mb-8  mx-auto">
+        <section className="bg-blue-50 p-6 rounded-xl shadow-md border border-blue-100 mb-8 mx-auto">
           <h3 className="text-2xl font-semibold text-[#003168] mb-5 flex items-center">
             <Calendar className="mr-3" size={24} /> Employment Period
           </h3>
@@ -575,7 +668,7 @@ const Profile = () => {
               <InputField
                 label="From"
                 type="date"
-                value={employmentPeriod.from}
+                value={employmentPeriod?.from || ""}
                 onChange={(e) =>
                   setEmploymentPeriod((p) => ({ ...p, from: e.target.value }))
                 }
@@ -583,7 +676,7 @@ const Profile = () => {
               <InputField
                 label="To"
                 type="date"
-                value={employmentPeriod.to}
+                value={employmentPeriod?.to || ""}
                 onChange={(e) =>
                   setEmploymentPeriod((p) => ({ ...p, to: e.target.value }))
                 }
@@ -592,58 +685,16 @@ const Profile = () => {
           ) : (
             <p className="text-gray-700 text-lg">
               <span className="font-medium">From:</span>{" "}
-              {user.employmentPeriod?.from
+              {user?.employmentPeriod?.from
                 ? new Date(user.employmentPeriod.from).toLocaleDateString()
                 : "N/A"}{" "}
               <span className="font-medium ml-4">To:</span>{" "}
-              {user.employmentPeriod?.to
+              {user?.employmentPeriod?.to
                 ? new Date(user.employmentPeriod.to).toLocaleDateString()
                 : "Present"}
             </p>
           )}
         </section>
-
-        {/* Social Links */}
-        {/* <section className="bg-blue-50 p-6 rounded-xl shadow-md border border-blue-100 mb-8 max-w-lg mx-auto">
-          <h3 className="text-2xl font-semibold text-[#003168] mb-5 flex items-center">
-            <Link className="mr-3" size={24} /> Social Links
-          </h3>
-          {editMode ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-              {["linkedin", "twitter", "facebook", "github"].map((platform) => (
-                <InputField
-                  key={platform}
-                  label={platform.charAt(0).toUpperCase() + platform.slice(1)}
-                  type="url"
-                  value={socialLinks[platform]}
-                  onChange={(e) => updateSocialLink(platform, e.target.value)}
-                  placeholder={`https://www.${platform}.com/yourprofile`}
-                />
-              ))}
-            </div>
-          ) : (
-            <ul className="list-disc ml-5 text-blue-700 text-lg">
-              {["linkedin", "twitter", "facebook", "github"].map((platform) => (
-                <li key={platform} className="mb-2">
-                  {user.socialLinks && user.socialLinks[platform] ? (
-                    <a
-                      href={user.socialLinks[platform]}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-[#003168] hover:text-blue-600 underline font-medium transition-colors duration-200"
-                    >
-                      {platform.charAt(0).toUpperCase() + platform.slice(1)} Profile
-                    </a>
-                  ) : (
-                    <span className="text-gray-600">
-                      {platform.charAt(0).toUpperCase() + platform.slice(1)}: N/A
-                    </span>
-                  )}
-                </li>
-              ))}
-            </ul>
-          )}
-        </section> */}
 
         {/* Buttons */}
         <div className="flex justify-end gap-4 pt-6 border-t border-gray-200">

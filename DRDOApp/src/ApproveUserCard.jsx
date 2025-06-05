@@ -1,8 +1,6 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
-
 const apiUrl = import.meta.env.VITE_API_URL;
-
 const ApproveUserCard = () => {
   const [pendingUsers, setPendingUsers] = useState([]);
   const [groups, setGroups] = useState([]);
@@ -160,7 +158,10 @@ const ApproveUserCard = () => {
                 >
                   <option value="">Select Role</option>
                   <option value="employee">Employee</option>
-                  <option value="admin">Admin</option>
+                  <option value="associate_director">Associate Director</option>
+                  <option value="director">Director</option>
+                  {/* <option value="employee">Employee</option> */}
+                  {/* <option value="admin">Admin</option> */}
                 </select>
               </div>
 

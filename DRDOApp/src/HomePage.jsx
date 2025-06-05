@@ -71,7 +71,7 @@ function HomePage() {
   };
 
   return (
-    <div className=" bg-gray-50 font-sans text-black mt-14">
+    <div className=" bg-gray-50 font-sans text-black mt-20">
       <main className="flex flex-col md:flex-row  mx-auto shadow-lg rounded-lg bg-white">
         {/* Sidebar */}
         <aside className="w-full md:w-1/4 bg-blue-100 p-6 space-y-4 rounded-l-lg border-r border-blue-300 shadow-inner">

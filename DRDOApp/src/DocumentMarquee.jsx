@@ -1,20 +1,24 @@
 // export default DocumentMarquee;
 import React, { useEffect, useState } from "react";
 const apiUri = import.meta.env.VITE_API_URL || "http://localhost:5000";
-
+import axios from "axios";
 const DocumentMarquee = () => {
   const [documents, setDocuments] = useState([]);
-
+  const [labId, setLabId] = useState(null);
   useEffect(() => {
     const fetchDocuments = async () => {
       try {
-        const res = await fetch(
-          `${apiUri}/api/labs/6831e91d804bf498865b819d/documents`
-        );
-        const data = await res.json();
+        const labRes = await axios.get(`${apiUri}/api/labs/only`);
+        const labId = labRes.data._id;
+
+        const res = await axios.get(`${apiUri}/api/labs/${labId}/documents`);
+        const data = res.data;
 
         const formattedDocs = [
-          ...(data.notices || []).map((doc) => ({ ...doc, type: "Notice" })),
+          ...(data.notices || []).map((doc) => ({
+            ...doc,
+            type: "Notice",
+          })),
           ...(data.circulars || []).map((doc) => ({
             ...doc,
             type: "Circular",
@@ -30,7 +34,32 @@ const DocumentMarquee = () => {
     fetchDocuments();
   }, []);
 
-  if (documents.length === 0) return null;
+  if (documents.length === 0) {
+    return (
+      <div
+        style={{
+          position: "fixed",
+          top: 0,
+          left: 0,
+          right: 0,
+          zIndex: 9999,
+          backgroundColor: "#FEF3C7",
+          border: "1px solid #FBBF24",
+          padding: "8px 16px",
+          display: "flex",
+          alignItems: "center",
+          height: "40px",
+          fontWeight: "bold",
+          color: "#B45309",
+          userSelect: "none",
+          fontFamily: "sans-serif",
+          justifyContent: "center",
+        }}
+      >
+        No notices or circulars available.
+      </div>
+    );
+  }
 
   return (
     <div

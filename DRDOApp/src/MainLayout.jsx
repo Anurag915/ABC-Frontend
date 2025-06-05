@@ -11,7 +11,7 @@ export default function MainLayout() {
       <TopNavbar />
       <Navbar />
 
-      <main className="flex-grow mt-[200px]">
+      <main className="flex-grow mt-[230px]">
         <Outlet />
       </main>
 

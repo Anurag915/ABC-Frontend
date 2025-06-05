@@ -26,7 +26,8 @@ import MyGroup from "./MyGroup";
 import AdminLogs from "./AdminLogs";
 import CloseGroupManager from "./CloseGroupManager";
 import UserCloseGroupDocs from "./UserCloseGroupDocs";
-
+import AddLabForm from "./AddLabForm";
+import AddGroupForm from "./AddGroupForm";
 function App() {
   return (
     <Router>
@@ -79,6 +80,22 @@ function App() {
               element={
                 <RequireAdmin>
                   <ApproveUserCard />
+                </RequireAdmin>
+              }
+            />
+            <Route
+              path="/admin/add-labs"
+              element={
+                <RequireAdmin>
+                  <AddLabForm />
+                </RequireAdmin>
+              }
+            />
+            <Route
+              path="/admin/add-groups"
+              element={
+                <RequireAdmin>
+                  <AddGroupForm />
                 </RequireAdmin>
               }
             />

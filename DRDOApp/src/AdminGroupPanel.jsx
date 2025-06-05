@@ -51,7 +51,7 @@ export default function AdminGroupPanel() {
   };
 
   return (
-    <div className="bg-amber-50 font-sans text-gray-900 mt-14">
+    <div className="bg-amber-50 font-sans text-gray-900 mt-20">
       <main className="flex flex-col md:flex-row mx-auto shadow-lg rounded-lg bg-white">
         {/* Sidebar */}
         <aside className="w-full md:w-1/4 bg-amber-100 p-6 space-y-4 rounded-l-lg border-r border-amber-300 shadow-inner">

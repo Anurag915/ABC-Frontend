@@ -4,9 +4,7 @@ import { HiMenu, HiX } from "react-icons/hi";
 import { FaChevronDown, FaChevronUp } from "react-icons/fa";
 import axios from "axios";
 import "./Navbar.css";
-
 const apiUrl = import.meta.env.VITE_API_URL || "http://localhost:5000";
-
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -15,6 +13,7 @@ export default function Navbar() {
   const [openDropdown, setOpenDropdown] = useState(null);
   const [openMobileDropdown, setOpenMobileDropdown] = useState(null);
   const [topOffset, setTopOffset] = useState(135);
+  const [labs, setLabs] = useState([]);
 
   useEffect(() => {
     const updateOffset = () => {
@@ -32,6 +31,12 @@ export default function Navbar() {
 
   const { pathname } = useLocation();
   const navigate = useNavigate();
+  useEffect(() => {
+    axios
+      .get(`${apiUrl}/api/labs`)
+      .then((res) => setLabs(res.data))
+      .catch((err) => console.error("Failed to fetch labs:", err));
+  }, []);
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -65,6 +70,12 @@ export default function Navbar() {
     },
     ...(isLoggedIn
       ? [
+          userRole === "admin" &&
+            labs.length === 0 && { label: "Add Lab", to: "/admin/add-labs" },
+          userRole === "admin" && {
+            label: "Add Group",
+            to: "/admin/add-groups",
+          },
           userRole === "admin" && { label: "Manage Labs", to: "/admin" },
           userRole === "admin" && {
             label: "Manage Groups",
@@ -99,7 +110,7 @@ export default function Navbar() {
       className="main-navbar bg-[#003168] text-white shadow-lg w-full z-50"
       style={{ top: `${topOffset}px`, position: "fixed" }}
     >
-      <div className="flex items-center justify-between h-16 w-full px-2">
+      <div className="flex items-center justify-between h-24 w-full px-2">
         {/* Desktop Menu */}
         <div className="hidden md:flex space-x-6 items-center relative">
           {navItems.map(({ label, to, action, dropdown, items }) => {

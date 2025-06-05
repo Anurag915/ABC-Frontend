@@ -123,7 +123,7 @@ const CloseGroupManager = () => {
   };
 
   return (
-    <div className="p-6 mt-14 mx-auto">
+    <div className="p-6 mt-20 mx-auto">
       <h2 className="text-3xl font-semibold text-gray-800 mb-6 text-center">
         Manage Close Groups
       </h2>
