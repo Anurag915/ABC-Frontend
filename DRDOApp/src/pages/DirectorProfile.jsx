@@ -3,11 +3,11 @@ import axios from "axios";
 
 const apiUri = import.meta.env.VITE_API_URL;
 
-const DirectorProfile = () => {
+const DirectorProfile = ({labId}) => {
   const [director, setDirector] = useState(null);
   const [about, setAbout] = useState("");
 
-  const labId = "6831e91d804bf498865b819d";
+  // const labId = "6831e91d804bf498865b819d";
 
   useEffect(() => {
     const fetchLab = async () => {

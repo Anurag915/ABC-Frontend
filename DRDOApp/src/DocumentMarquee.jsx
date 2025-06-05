@@ -1,44 +1,3 @@
-// import React, { useEffect, useState } from "react";
-// import "./DocumentMarquee.css"; // optional for styling
-// const apiUri = import.meta.env.VITE_API_URL;
-// const DocumentMarquee = () => {
-//   const [documents, setDocuments] = useState([]);
-
-//   useEffect(() => {
-//     const fetchDocuments = async () => {
-//       try {
-//         const res = await fetch(`${apiUri}/api/documents/all`);
-//         const data = await res.json();
-//         setDocuments(data);
-//       } catch (err) {
-//         console.error("Failed to fetch documents:", err);
-//       }
-//     };
-
-//     fetchDocuments();
-//   }, []);
-
-//   if (documents.length === 0) return null;
-
-//   return (
-//     <div className="marquee-container">
-//       <marquee behavior="scroll" direction="left" scrollamount="6">
-//         {documents.map((doc, idx) => (
-//           <a
-//             key={idx}
-//             href={`${apiUri}${doc.url}`}
-//             target="_blank"
-//             rel="noopener noreferrer"
-//             className="doc-link"
-//           >
-//             {doc.name}
-//           </a>
-//         ))}
-//       </marquee>
-//     </div>
-//   );
-// };
-
 // export default DocumentMarquee;
 import React, { useEffect, useState } from "react";
 const apiUri = import.meta.env.VITE_API_URL || "http://localhost:5000";
@@ -49,12 +8,17 @@ const DocumentMarquee = () => {
   useEffect(() => {
     const fetchDocuments = async () => {
       try {
-        const res = await fetch(`${apiUri}/api/labs/6831e91d804bf498865b819d/documents`);
+        const res = await fetch(
+          `${apiUri}/api/labs/6831e91d804bf498865b819d/documents`
+        );
         const data = await res.json();
 
         const formattedDocs = [
-          ...(data.notices || []).map(doc => ({ ...doc, type: "Notice" })),
-          ...(data.circulars || []).map(doc => ({ ...doc, type: "Circular" }))
+          ...(data.notices || []).map((doc) => ({ ...doc, type: "Notice" })),
+          ...(data.circulars || []).map((doc) => ({
+            ...doc,
+            type: "Circular",
+          })),
         ];
 
         setDocuments(formattedDocs);
@@ -128,8 +92,12 @@ const DocumentMarquee = () => {
                 textDecoration: "none",
                 whiteSpace: "nowrap",
               }}
-              onMouseEnter={e => (e.currentTarget.style.textDecoration = "underline")}
-              onMouseLeave={e => (e.currentTarget.style.textDecoration = "none")}
+              onMouseEnter={(e) =>
+                (e.currentTarget.style.textDecoration = "underline")
+              }
+              onMouseLeave={(e) =>
+                (e.currentTarget.style.textDecoration = "none")
+              }
             >
               {doc.type}: {doc.name}
             </a>

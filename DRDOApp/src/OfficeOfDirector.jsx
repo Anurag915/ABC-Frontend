@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from "react";
 const apiUrl = import.meta.env.VITE_API_URL || "http://localhost:5000";
-const OfficeOfDirector = () => {
+const OfficeOfDirector = ({labId}) => {
   const [directors, setDirectors] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    fetch(`${apiUrl}/api/labs/6831e91d804bf498865b819d`)
+    fetch(`${apiUrl}/api/labs/${labId}`)
       .then((res) => {
         if (!res.ok) throw new Error("Failed to fetch data");
         return res.json();

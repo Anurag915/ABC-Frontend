@@ -8,21 +8,37 @@ const ApproveUserCard = () => {
   const [groups, setGroups] = useState([]);
   const [loading, setLoading] = useState(true);
   const [groupSelections, setGroupSelections] = useState({}); // userId => { labId, groupId, role }
+  const [labId, setLabId] = useState(null);
+  const [labName, setLabName] = useState(""); // 👈 New
 
   useEffect(() => {
     const fetchInitialData = async () => {
       try {
-        const [usersRes, groupsRes] = await Promise.all([
+        const [usersRes, groupsRes, labRes] = await Promise.all([
           axios.get(`${apiUrl}/admin/pending-users`, {
             headers: {
               Authorization: `Bearer ${localStorage.getItem("token")}`,
             },
           }),
           axios.get(`${apiUrl}/api/groups/name`),
+          axios.get(`${apiUrl}/api/labs/only`),
         ]);
 
         setPendingUsers(usersRes.data);
         setGroups(groupsRes.data);
+        setLabId(labRes.data._id); // Store the only lab's ID
+        setLabName(labRes.data.name); // 👈 Set name too
+
+        // Pre-fill labId for all pending users
+        const initialSelections = {};
+        usersRes.data.forEach((user) => {
+          initialSelections[user._id] = {
+            labId: labRes.data._id,
+            groupId: "",
+            role: "",
+          };
+        });
+        setGroupSelections(initialSelections);
       } catch (err) {
         console.error("Error fetching data", err);
       } finally {
@@ -65,47 +81,59 @@ const ApproveUserCard = () => {
     }
   };
 
-  if (loading) return <p className="text-center mt-14 text-gray-600">Loading...</p>;
+  if (loading)
+    return <p className="text-center mt-14 text-gray-600">Loading...</p>;
   // if (pendingUsers.length === 0)
   //   return <p className="text-center mt-10 text-gray-500 text-lg">No pending users found ✅</p>;
   if (pendingUsers.length === 0)
-  return (
-    <div className="mt-24 sm:mt-20 px-4">
-      <p className="text-center text-gray-500 text-base sm:text-lg">
-        No pending users found ✅
-      </p>
-    </div>
-  );
-
+    return (
+      <div className="mt-24 sm:mt-20 px-4">
+        <p className="text-center text-gray-500 text-base sm:text-lg">
+          No pending users found ✅
+        </p>
+      </div>
+    );
 
   return (
     <div className="mt-14 p-6  mx-auto">
-      <h2 className="text-3xl font-bold mb-6 text-center text-blue-800">Pending User Approvals</h2>
+      <h2 className="text-3xl font-bold mb-6 text-center text-blue-800">
+        Pending User Approvals
+      </h2>
 
       <div className="grid gap-6 sm:grid-cols-1 md:grid-cols-2">
         {pendingUsers.map((user) => (
-          <div key={user._id} className="border p-5 rounded-2xl shadow-md hover:shadow-lg transition-all bg-white">
+          <div
+            key={user._id}
+            className="border p-5 rounded-2xl shadow-md hover:shadow-lg transition-all bg-white"
+          >
             <h3 className="text-xl font-semibold text-gray-800">{user.name}</h3>
             <p className="text-gray-600">📧 {user.email}</p>
-            <p className="text-gray-500 mb-3">Role Requested: <span className="font-medium">{user.role}</span></p>
+            <p className="text-gray-500 mb-3">
+              Role Requested: <span className="font-medium">{user.role}</span>
+            </p>
 
             <div className="space-y-3">
               <div>
-                <label className="block text-sm font-medium text-gray-700">Lab ID</label>
+                <label className="block text-sm font-medium text-gray-700">
+                  Lab
+                </label>
                 <input
                   type="text"
-                  placeholder="Enter Lab ID"
-                  value={groupSelections[user._id]?.labId || ""}
-                  onChange={(e) => handleInputChange(user._id, "labId", e.target.value)}
-                  className="w-full mt-1 p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"
+                  value={labName}
+                  readOnly
+                  className="w-full mt-1 p-2 border rounded-md bg-gray-100 text-gray-700 cursor-not-allowed"
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700">Group</label>
+                <label className="block text-sm font-medium text-gray-700">
+                  Group
+                </label>
                 <select
                   value={groupSelections[user._id]?.groupId || ""}
-                  onChange={(e) => handleInputChange(user._id, "groupId", e.target.value)}
+                  onChange={(e) =>
+                    handleInputChange(user._id, "groupId", e.target.value)
+                  }
                   className="w-full mt-1 p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"
                 >
                   <option value="">Select Group</option>
@@ -120,10 +148,14 @@ const ApproveUserCard = () => {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700">Assign Role</label>
+                <label className="block text-sm font-medium text-gray-700">
+                  Assign Role
+                </label>
                 <select
                   value={groupSelections[user._id]?.role || ""}
-                  onChange={(e) => handleInputChange(user._id, "role", e.target.value)}
+                  onChange={(e) =>
+                    handleInputChange(user._id, "role", e.target.value)
+                  }
                   className="w-full mt-1 p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"
                 >
                   <option value="">Select Role</option>

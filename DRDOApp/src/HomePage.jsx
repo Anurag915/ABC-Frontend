@@ -1,4 +1,4 @@
-import { useState } from "react";
+// import { useState } from "react";
 import RoleOfHonourTable from "./RoleOfHonourTable";
 import LabDetails from "./pages/Labs";
 import DirectorProfile from "./pages/DirectorProfile";
@@ -9,7 +9,9 @@ import ProductsAndAdvertisements from "./ProductsAndAdvertisements";
 import OfficeOfDirector from "./OfficeOfDirector";
 import LabHistoryDetails from "./LabHistoryDetails";
 import LabManpowerList from "./LabManpowerList";
-const labId = "6831e91d804bf498865b819d"; // Replace with the actual lab ID
+import { useEffect, useState } from "react";
+import axios from "axios";
+const apiUrl = import.meta.env.VITE_API_URL || "http://localhost:5000";
 const sections = [
   "About Lab",
   "Vision and Mission",
@@ -25,29 +27,44 @@ const sections = [
 
 function HomePage() {
   const [selectedSection, setSelectedSection] = useState("About Lab");
+  const [labId, setLabId] = useState(null);
 
+  useEffect(() => {
+    const fetchLab = async () => {
+      try {
+        const res = await axios.get(`${apiUrl}/api/labs/only`);
+        setLabId(res.data._id);
+      } catch (err) {
+        console.error("Failed to load lab", err);
+      }
+    };
+    fetchLab();
+  }, []);
   const renderContent = () => {
+    console.log(labId);
+    if (!labId) return <p>Loading...</p>;
+
     switch (selectedSection) {
       case "About Lab":
-        return <LabDetails />;
+        return <LabDetails labId={labId} />;
       case "Vision and Mission":
-        return <VisionMission labId={labId}/>;
+        return <VisionMission labId={labId} />;
       case "Director Profile":
-        return <DirectorProfile />;
+        return <DirectorProfile labId={labId} />;
       case "O/o Director":
-        return <OfficeOfDirector/>;
+        return <OfficeOfDirector labId={labId} />;
       case "Role & Honour":
         return <RoleOfHonourTable labId={labId} />;
       case "Lab History":
-        return <LabHistoryDetails labId={labId}/>;
+        return <LabHistoryDetails labId={labId} />;
       case "Personnel Details":
         return <LabManpowerList labId={labId} />;
       case "Notices & Circular":
-        return <NoticesAndCirculars labId={labId}/>;
+        return <NoticesAndCirculars labId={labId} />;
       case "Product & Achievements":
         return <ProductsAndAdvertisements labId={labId} />;
       case "Contact Us":
-        return <Contact labId={labId}/>;
+        return <Contact labId={labId} />;
       default:
         return null;
     }
