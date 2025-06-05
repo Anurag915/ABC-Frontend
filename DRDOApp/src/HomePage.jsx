@@ -9,6 +9,7 @@ import ProductsAndAdvertisements from "./ProductsAndAdvertisements";
 import OfficeOfDirector from "./OfficeOfDirector";
 import LabHistoryDetails from "./LabHistoryDetails";
 import LabManpowerList from "./LabManpowerList";
+import InfiniteLabPhotos from "./InfiniteLabPhotos";
 import { useEffect, useState } from "react";
 import axios from "axios";
 const apiUrl = import.meta.env.VITE_API_URL || "http://localhost:5000";
@@ -23,6 +24,7 @@ const sections = [
   "Notices & Circular",
   "Product & Achievements",
   "Contact Us",
+  // "gallery",
 ];
 
 function HomePage() {
@@ -43,7 +45,7 @@ function HomePage() {
   const renderContent = () => {
     console.log(labId);
     if (!labId) return <p>Loading...</p>;
-
+    // return <InfiniteLabPhotos labId={labId} />;
     switch (selectedSection) {
       case "About Lab":
         return <LabDetails labId={labId} />;
@@ -65,6 +67,8 @@ function HomePage() {
         return <ProductsAndAdvertisements labId={labId} />;
       case "Contact Us":
         return <Contact labId={labId} />;
+      // case "gallery": // new section for your photos
+      //   return <InfiniteLabPhotos labId={labId} />;
       default:
         return null;
     }
@@ -72,6 +76,13 @@ function HomePage() {
 
   return (
     <div className=" bg-gray-50 font-sans text-black mt-20">
+      {labId ? (
+        <div className="mb-8">
+          <InfiniteLabPhotos labId={labId} />
+        </div>
+      ) : (
+        <p>Loading gallery...</p>
+      )}
       <main className="flex flex-col md:flex-row  mx-auto shadow-lg rounded-lg bg-white">
         {/* Sidebar */}
         <aside className="w-full md:w-1/4 bg-blue-100 p-6 space-y-4 rounded-l-lg border-r border-blue-300 shadow-inner">

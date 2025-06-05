@@ -4,7 +4,7 @@ import { Info } from "lucide-react";
 const apiUrl = import.meta.env.VITE_API_URL || "http://localhost:5000";
 // const labId = "6831e91d804bf498865b819d";
 
-export default function LabDetails({labId}) {
+export default function LabDetails({ labId }) {
   const [lab, setLab] = useState(null);
   const [loading, setLoading] = useState(true);
 

@@ -11,7 +11,9 @@ const ProductsAndAdvertisements = ({ labId }) => {
     const fetchData = async () => {
       try {
         setLoading(true);
-        const res = await fetch(`${apiUrl}/api/labs/${labId}/products-advertisements`);
+        const res = await fetch(
+          `${apiUrl}/api/labs/${labId}/products-advertisements`
+        );
         const data = await res.json();
 
         if (res.ok) {

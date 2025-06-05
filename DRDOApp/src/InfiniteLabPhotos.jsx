@@ -1,0 +1,252 @@
+import React, { useState, useEffect, useRef, useCallback, useMemo } from "react";
+import axios from "axios";
+const apiUrl = import.meta.env.VITE_API_URL || "http://localhost:5000";
+
+export default function InfiniteLabPhotos({ labId }) {
+  const [photos, setPhotos] = useState([]);
+  const [skip, setSkip] = useState(0);
+  const limit = 3;
+  const loadingRef = useRef(false);
+  const [hasMore, setHasMore] = useState(true);
+  const containerRef = useRef(null);
+  const autoSlideIntervalRef = useRef(null);
+  const [isHovered, setIsHovered] = useState(false);
+  const autoSlideDelay = 3000;
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [isLoading, setIsLoading] = useState(false);
+
+  const loadPhotos = async () => {
+    if (loadingRef.current || !hasMore) return;
+    loadingRef.current = true;
+    setIsLoading(true);
+
+    try {
+      const res = await axios.get(
+        `${apiUrl}/api/labs/${labId}/photos?skip=${skip}&limit=${limit}`
+      );
+
+      if (res.data.length < limit) setHasMore(false);
+      setPhotos((prev) => [...prev, ...res.data]);
+      setSkip((prev) => prev + limit);
+    } catch (err) {
+      console.error("Error loading photos:", err);
+    } finally {
+      loadingRef.current = false;
+      setIsLoading(false);
+    }
+  };
+
+  const scrollToIndex = useCallback(
+    (index) => {
+      if (!containerRef.current || photos.length === 0) return;
+      const photoBlockWidthVW = 75;
+      const gapPx = parseFloat(getComputedStyle(containerRef.current).gap || "0px");
+      const itemWidth = (containerRef.current.clientWidth * photoBlockWidthVW) / 100 + gapPx;
+      containerRef.current.scrollTo({
+        left: index * itemWidth,
+        behavior: "smooth",
+      });
+    },
+    [photos]
+  );
+
+  const handleNext = useCallback(() => {
+    setCurrentIndex((prevIndex) => {
+      const totalItems = photos.length + (!hasMore ? 1 : 0);
+      const nextIndex = (prevIndex + 1) % totalItems;
+      scrollToIndex(nextIndex);
+      if (nextIndex >= photos.length - 2 && hasMore && !loadingRef.current) {
+        loadPhotos();
+      }
+      return nextIndex;
+    });
+  }, [photos.length, hasMore, scrollToIndex]);
+
+  const handlePrev = useCallback(() => {
+    setCurrentIndex((prevIndex) => {
+      const totalItems = photos.length + (!hasMore ? 1 : 0);
+      const prevIndexCalculated = (prevIndex - 1 + totalItems) % totalItems;
+      scrollToIndex(prevIndexCalculated);
+      return prevIndexCalculated;
+    });
+  }, [photos.length, hasMore, scrollToIndex]);
+
+  useEffect(() => {
+    loadPhotos();
+  }, [labId]);
+
+  useEffect(() => {
+    const startAutoSlide = () => {
+      if (autoSlideIntervalRef.current) {
+        clearInterval(autoSlideIntervalRef.current);
+      }
+      autoSlideIntervalRef.current = setInterval(() => {
+        if (!isHovered && photos.length > 0) {
+          handleNext();
+        }
+      }, autoSlideDelay);
+    };
+    startAutoSlide();
+    return () => clearInterval(autoSlideIntervalRef.current);
+  }, [isHovered, photos.length, handleNext]);
+
+  const renderedPhotos = useMemo(() => {
+    return photos.map((photo, index) => (
+      <div
+        key={photo._id}
+        style={{
+          scrollSnapAlign: "center",
+          flexShrink: 0,
+          width: "75vw",
+          height: "360px",
+          position: "relative",
+          borderRadius: "8px",
+          boxShadow: "0 2px 8px rgba(0,0,0,0.15)",
+          overflow: "hidden",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          willChange: "transform",
+          transform: "translateZ(0)",
+        }}
+      >
+        <img
+          src={`${apiUrl}${photo.fileUrl}`}
+          alt={photo.name}
+          loading={index === 0 ? "eager" : "lazy"}
+          style={{
+            width: "100%",
+            height: "100%",
+            objectFit: "cover",
+            display: "block",
+          }}
+        />
+      </div>
+    ));
+  }, [photos]);
+
+  return (
+    <div
+      style={{
+        position: "relative",
+        width: "100vw",
+        padding: "1rem 0",
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center",
+      }}
+    >
+      <div
+        ref={containerRef}
+        className="overflow-x-auto flex hide-scrollbar"
+        style={{
+          scrollSnapType: "x mandatory",
+          scrollBehavior: "smooth",
+          width: "100%",
+          paddingLeft: "12.5vw",
+          paddingRight: "12.5vw",
+          gap: "1rem",
+        }}
+        tabIndex={0}
+        onMouseEnter={() => setIsHovered(true)}
+        onMouseLeave={() => setIsHovered(false)}
+      >
+        {renderedPhotos}
+        {!hasMore && (
+          <div
+            style={{
+              scrollSnapAlign: "center",
+              flexShrink: 0,
+              width: "75vw",
+              height: "360px",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              fontSize: "1.2rem",
+              backgroundColor: "#f0f0f0",
+              borderRadius: "8px",
+              boxShadow: "0 2px 8px rgba(0,0,0,0.15)",
+            }}
+          >
+            No more photos
+          </div>
+        )}
+        {isLoading && (
+          <div
+            style={{
+              scrollSnapAlign: "center",
+              flexShrink: 0,
+              width: "75vw",
+              height: "360px",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              fontSize: "1.2rem",
+              backgroundColor: "#f0f0f0",
+              borderRadius: "8px",
+              opacity: 0.8,
+            }}
+          >
+            Loading more photos...
+          </div>
+        )}
+      </div>
+
+      {/* Navigation */}
+      <button
+        onClick={handlePrev}
+        style={navButtonStyle("left")}
+      >
+        {"<"}
+      </button>
+      <button
+        onClick={handleNext}
+        style={navButtonStyle("right")}
+      >
+        {">"}
+      </button>
+
+      {/* Dots */}
+      <div style={{ display: "flex", marginTop: "1rem", gap: "0.5rem" }}>
+        {Array.from({ length: photos.length + (!hasMore ? 1 : 0) }).map((_, index) => (
+          <span
+            key={index}
+            style={{
+              width: "10px",
+              height: "10px",
+              borderRadius: "50%",
+              backgroundColor: currentIndex === index ? "#333" : "#ccc",
+              cursor: "pointer",
+              transition: "background-color 0.3s ease",
+            }}
+            onClick={() => {
+              setCurrentIndex(index);
+              scrollToIndex(index);
+            }}
+          />
+        ))}
+      </div>
+    </div>
+  );
+}
+
+const navButtonStyle = (side) => ({
+  position: "absolute",
+  [side]: "1rem",
+  top: "50%",
+  transform: "translateY(-50%)",
+  zIndex: 10,
+  background: "rgba(0,0,0,0.5)",
+  color: "white",
+  border: "none",
+  borderRadius: "50%",
+  width: "40px",
+  height: "40px",
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
+  cursor: "pointer",
+  fontSize: "1.5rem",
+  paddingBottom: "4px",
+});
