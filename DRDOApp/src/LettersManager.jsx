@@ -118,7 +118,7 @@ const LettersManager = () => {
   };
 
   return (
-    <div className="mt-14 max-w-5xl mx-auto p-6 space-y-8">
+    <div className="mt-14 mx-auto p-6 space-y-8">
       <h1 className="text-3xl font-semibold text-gray-800">
         Letters Manager
       </h1>

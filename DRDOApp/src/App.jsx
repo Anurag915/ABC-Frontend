@@ -29,6 +29,7 @@ import UserCloseGroupDocs from "./UserCloseGroupDocs";
 import AddLabForm from "./AddLabForm";
 import AddGroupForm from "./AddGroupForm";
 import LettersManager from "./LettersManager";
+import LettersList from "./LettersList";
 function App() {
   return (
     <Router>
@@ -81,6 +82,14 @@ function App() {
               element={
                 <ProtectedRoute>
                   <LettersManager />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/allLetter"
+              element={
+                <ProtectedRoute>
+                  <LettersList />
                 </ProtectedRoute>
               }
             />
