@@ -28,6 +28,7 @@ import CloseGroupManager from "./CloseGroupManager";
 import UserCloseGroupDocs from "./UserCloseGroupDocs";
 import AddLabForm from "./AddLabForm";
 import AddGroupForm from "./AddGroupForm";
+import LettersManager from "./LettersManager";
 function App() {
   return (
     <Router>
@@ -72,6 +73,14 @@ function App() {
               element={
                 <ProtectedRoute>
                   <GroupDetails />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/dac"
+              element={
+                <ProtectedRoute>
+                  <LettersManager />
                 </ProtectedRoute>
               }
             />

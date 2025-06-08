@@ -76,6 +76,14 @@ export default function Navbar() {
             label: "Add Group",
             to: "/admin/add-groups",
           },
+          (userRole === "admin" || userRole === "director") && {
+            label: "All Letters",
+            to: "/dac",
+          },
+          userRole === "employee" && {
+            label: "Upload Letter",
+            to: "/dac",
+          },
           userRole === "admin" && { label: "Manage Labs", to: "/admin" },
           userRole === "admin" && {
             label: "Manage Groups",
