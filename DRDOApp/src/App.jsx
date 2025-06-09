@@ -30,6 +30,8 @@ import AddLabForm from "./AddLabForm";
 import AddGroupForm from "./AddGroupForm";
 import LettersManager from "./LettersManager";
 import LettersList from "./LettersList";
+import SoftwareRepoViewer from "./SoftwareRepoViewer";
+import SoftwareRepoUpload from "./SoftwareRepoUpload";
 function App() {
   return (
     <Router>
@@ -93,6 +95,46 @@ function App() {
                 </ProtectedRoute>
               }
             />
+            <Route
+              path="/upload-repo"
+              element={
+                <ProtectedRoute>
+                  <SoftwareRepoUpload />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/view-repo"
+              element={
+                <ProtectedRoute>
+                  <SoftwareRepoViewer />
+                </ProtectedRoute>
+              }
+            />
+            {/* <Route
+              path="/upload-repo"
+              element={
+                <ProtectedRoute>
+                  <SoftwareRepoUpload />
+                </ProtectedRoute>
+              }
+            /> */}
+            <Route
+              path="/upload-repo"
+              element={
+                <ProtectedRoute>
+                  <SoftwareRepoUpload />
+                </ProtectedRoute>
+              }
+            />
+
+            {/* <Route path="/upload-repo" element={<SoftwareRepoUpload />} /> */}
+            {/* <Route path="/view-repo" element={<SoftwareRepoView />} /> */}
+            {/* <Route
+              path="/view-repo/group/:groupId"
+              element={<GroupRepoView />}
+            /> */}
+
             <Route
               path="/admin/approval"
               element={

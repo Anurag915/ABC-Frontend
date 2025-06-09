@@ -16,11 +16,13 @@ export default function Navbar() {
   // State for desktop main dropdowns (e.g., "Groups", "Admin")
   const [openDesktopMainDropdown, setOpenDesktopMainDropdown] = useState(null);
   // State for desktop nested dropdowns (e.g., "Manage Groups" within "Admin")
-  const [openDesktopNestedDropdown, setOpenDesktopNestedDropdown] = useState(null);
+  const [openDesktopNestedDropdown, setOpenDesktopNestedDropdown] =
+    useState(null);
   // State for mobile main dropdowns
   const [openMobileMainDropdown, setOpenMobileMainDropdown] = useState(null);
   // State for mobile nested dropdowns
-  const [openMobileNestedDropdown, setOpenMobileNestedDropdown] = useState(null);
+  const [openMobileNestedDropdown, setOpenMobileNestedDropdown] =
+    useState(null);
 
   const [openAccount, setOpenAccount] = useState(false); // State for desktop/mobile account dropdown
   const [topOffset, setTopOffset] = useState(135);
@@ -162,6 +164,15 @@ export default function Navbar() {
             label: "All Letters",
             to: "/allLetter",
           },
+          (userRole === "admin" || userRole === "director") && {
+            label: "All Software Repositories",
+            to: "/view-repo",
+          },
+          (userRole === "admin" || userRole === "associate_director") && {
+            label: "Software Repository Upload",
+            to: "/upload-repo",
+          },
+
           userRole === "employee" && {
             label: "Upload Letter",
             to: "/dac",
@@ -199,8 +210,15 @@ export default function Navbar() {
           {navItems.map((item) => {
             const isNavLinkActive = item.to && pathname === item.to;
             const isDropdownActive =
-              item.dropdown && item.items.some((subItem) => pathname === subItem.to || (subItem.dropdown && subItem.items.some(nestedItem => pathname === nestedItem.to)));
-
+              item.dropdown &&
+              item.items.some(
+                (subItem) =>
+                  pathname === subItem.to ||
+                  (subItem.dropdown &&
+                    subItem.items.some(
+                      (nestedItem) => pathname === nestedItem.to
+                    ))
+              );
 
             if (item.dropdown) {
               return (
@@ -216,7 +234,9 @@ export default function Navbar() {
                       }
                     }}
                     className={`px-4 py-2 rounded-md text-base font-medium flex items-center gap-1 transition duration-300 ${
-                      openDesktopMainDropdown === item.label || isDropdownActive || isNavLinkActive
+                      openDesktopMainDropdown === item.label ||
+                      isDropdownActive ||
+                      isNavLinkActive
                         ? "bg-[#0066cc] text-white"
                         : "hover:bg-[#004b99]"
                     }`}
@@ -237,11 +257,15 @@ export default function Navbar() {
                               <button
                                 onClick={() =>
                                   setOpenDesktopNestedDropdown((prev) =>
-                                    prev === subItem.label ? null : subItem.label
+                                    prev === subItem.label
+                                      ? null
+                                      : subItem.label
                                   )
                                 }
                                 className={`block w-full text-left px-4 py-2 text-white flex justify-between items-center transition duration-200 hover:bg-[#0066cc] ${
-                                  openDesktopNestedDropdown === subItem.label ? "bg-[#0066cc]" : ""
+                                  openDesktopNestedDropdown === subItem.label
+                                    ? "bg-[#0066cc]"
+                                    : ""
                                 }`}
                               >
                                 {subItem.label}
@@ -266,7 +290,9 @@ export default function Navbar() {
                                         navigate(nestedItem.to);
                                       }}
                                       className={`block w-full text-left px-4 py-2 text-white transition duration-200 hover:bg-[#0066cc] ${
-                                        pathname === nestedItem.to ? "bg-[#0066cc]" : ""
+                                        pathname === nestedItem.to
+                                          ? "bg-[#0066cc]"
+                                          : ""
                                       }`}
                                     >
                                       {nestedItem.label}
@@ -391,7 +417,9 @@ export default function Navbar() {
                         }
                       }}
                       className={`flex justify-between items-center w-full text-left px-4 py-2 rounded-md text-base font-medium text-white transition duration-300 hover:bg-[#004b99] ${
-                        openMobileMainDropdown === item.label ? "bg-[#0066cc]" : ""
+                        openMobileMainDropdown === item.label
+                          ? "bg-[#0066cc]"
+                          : ""
                       }`}
                     >
                       {item.label}
@@ -410,15 +438,20 @@ export default function Navbar() {
                                 <button
                                   onClick={() =>
                                     setOpenMobileNestedDropdown((prev) =>
-                                      prev === subItem.label ? null : subItem.label
+                                      prev === subItem.label
+                                        ? null
+                                        : subItem.label
                                     )
                                   }
                                   className={`block w-full text-left px-4 py-2 text-white flex justify-between items-center transition duration-200 hover:bg-[#0066cc] ${
-                                    openMobileNestedDropdown === subItem.label ? "bg-[#0066cc]" : ""
+                                    openMobileNestedDropdown === subItem.label
+                                      ? "bg-[#0066cc]"
+                                      : ""
                                   }`}
                                 >
                                   {subItem.label}
-                                  {openMobileNestedDropdown === subItem.label ? (
+                                  {openMobileNestedDropdown ===
+                                  subItem.label ? (
                                     <FaChevronUp className="ml-2" />
                                   ) : (
                                     <FaChevronDown className="ml-2" />
@@ -439,7 +472,9 @@ export default function Navbar() {
                                           navigate(nestedItem.to);
                                         }}
                                         className={`block w-full text-left px-4 py-2 text-white transition duration-200 hover:bg-[#0066cc] ${
-                                          pathname === nestedItem.to ? "bg-[#0066cc]" : ""
+                                          pathname === nestedItem.to
+                                            ? "bg-[#0066cc]"
+                                            : ""
                                         }`}
                                       >
                                         {nestedItem.label}
