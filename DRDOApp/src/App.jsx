@@ -32,6 +32,9 @@ import LettersManager from "./LettersManager";
 import LettersList from "./LettersList";
 import SoftwareRepoViewer from "./SoftwareRepoViewer";
 import SoftwareRepoUpload from "./SoftwareRepoUpload";
+import TrialRepoUpload from "./TrialRepoUpload";
+import TrialRepoViewer from "./TrialRepoViewer";
+import LabPhotoManager from "./LabPhotoManager";
 function App() {
   return (
     <Router>
@@ -111,6 +114,22 @@ function App() {
                 </ProtectedRoute>
               }
             />
+            <Route
+              path="/upload-trialRepo"
+              element={
+                <ProtectedRoute>
+                  <TrialRepoUpload />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/view-trialRepo"
+              element={
+                <ProtectedRoute>
+                  <TrialRepoViewer />
+                </ProtectedRoute>
+              }
+            />
             {/* <Route
               path="/upload-repo"
               element={
@@ -152,6 +171,14 @@ function App() {
               }
             />
             <Route
+              path="/admin/manageGallery"
+              element={
+                <RequireAdmin>
+                  <LabPhotoManager />
+                </RequireAdmin>
+              }
+            />
+            <Route
               path="/admin/add-groups"
               element={
                 <RequireAdmin>
@@ -183,11 +210,39 @@ function App() {
                 </RequireAdmin>
               }
             >
-              <Route path="manage-lab" element={<ManageLabInfo />} />
-              <Route path="manage" element={<ManageNoticesCirculars />} />
-              <Route path="groups/:id" element={<GroupDetails />} />
+              <Route
+                path="manage-lab"
+                element={
+                  <RequireAdmin>
+                    <ManageLabInfo />
+                  </RequireAdmin>
+                }
+              />
+              <Route
+                path="manage"
+                element={
+                  <RequireAdmin>
+                    <ManageNoticesCirculars />
+                  </RequireAdmin>
+                }
+              />
+              <Route
+                path="groups/:id"
+                element={
+                  <RequireAdmin>
+                    <GroupDetails />
+                  </RequireAdmin>
+                }
+              />
             </Route>
-            <Route path="/admin/group/:id" element={<AdminGroupPanel />} />
+            <Route
+              path="/admin/group/:id"
+              element={
+                <RequireAdmin>
+                  <AdminGroupPanel />
+                </RequireAdmin>
+              }
+            />
           </Routes>
         </main>
 

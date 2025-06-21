@@ -32,6 +32,22 @@ export default function Navbar() {
 
   const navRef = useRef(null);
   const mobileMenuRef = useRef(null);
+  const [user, setUser] = useState(null);
+
+  // useEffect(() => {
+  //   const fetchUser = async () => {
+  //     try {
+  //       const res = await axiosInstance.get("/api/users/me");
+  //       setUser(res.data);
+  //     } catch (err) {
+  //       console.error("Error fetching user profile", err);
+  //     }
+  //   };
+
+  //   if (isLoggedIn) {
+  //     fetchUser();
+  //   }
+  // }, [isLoggedIn]);
 
   useEffect(() => {
     const updateOffset = () => {
@@ -130,16 +146,17 @@ export default function Navbar() {
 
   const navItems = [
     { label: "Home", to: "/" },
-    {
-      label: "Groups",
-      dropdown: true,
-      items: groups.map((group) => ({
-        label: group.name,
-        to: `/group/id/${group._id}`,
-      })),
-    },
+
     ...(isLoggedIn
       ? [
+          {
+            label: "Groups",
+            dropdown: true,
+            items: groups.map((group) => ({
+              label: group.name,
+              to: `/group/id/${group._id}`,
+            })),
+          },
           userRole === "admin" && {
             label: "Admin",
             dropdown: true,
@@ -158,19 +175,28 @@ export default function Navbar() {
               { label: "Manage Close Group", to: "/admin/closeGroup" },
               { label: "Approve Users", to: "/admin/approval" },
               { label: "Logs", to: "/admin/logs" },
+              { label: "Manage Gallery", to: "/admin/manageGallery" },
+              (userRole === "admin" || userRole === "director") && {
+                label: "All Letters",
+                to: "/allLetter",
+              },
+              (userRole === "admin" || userRole === "director") && {
+                label: "All Software Repositories",
+                to: "/view-repo",
+              },
+              (userRole === "admin" || userRole === "director") && {
+                label: "All Trial Repositories",
+                to: "/view-trialRepo",
+              },
+              (userRole === "admin" || userRole === "associate_director") && {
+                label: "Software Repository Upload",
+                to: "/upload-repo",
+              },
+              (userRole === "admin" || userRole === "associate_director") && {
+                label: "Trial Repository Upload",
+                to: "/upload-trialRepo",
+              },
             ].filter(Boolean),
-          },
-          (userRole === "admin" || userRole === "director") && {
-            label: "All Letters",
-            to: "/allLetter",
-          },
-          (userRole === "admin" || userRole === "director") && {
-            label: "All Software Repositories",
-            to: "/view-repo",
-          },
-          (userRole === "admin" || userRole === "associate_director") && {
-            label: "Software Repository Upload",
-            to: "/upload-repo",
           },
 
           userRole === "employee" && {
@@ -249,7 +275,14 @@ export default function Navbar() {
                     )}
                   </button>
                   {openDesktopMainDropdown === item.label && (
-                    <div className="absolute bg-[#004b99] rounded-md mt-1 w-56 shadow-lg z-50">
+                    <div
+                      className="absolute bg-[#004b99] rounded-md mt-1 w-56 shadow-lg z-50"
+                      style={{
+                        maxHeight: `calc(100vh - ${topOffset + 96 + 20}px)`, // Adjust 20px padding as needed
+                        overflowY: "auto",
+                      }}
+                    >
+                      {" "}
                       {item.items && item.items.length > 0 ? (
                         item.items.map((subItem) =>
                           subItem.dropdown ? (
@@ -276,7 +309,16 @@ export default function Navbar() {
                                 )}
                               </button>
                               {openDesktopNestedDropdown === subItem.label && (
-                                <div className="absolute left-full top-0 ml-1 bg-[#004b99] rounded-md w-56 shadow-lg z-50">
+                                <div
+                                  className="absolute left-full top-0 ml-1 bg-[#004b99] rounded-md w-56 shadow-lg z-50"
+                                  style={{
+                                    maxHeight: `calc(100vh - ${
+                                      topOffset + 96 + 20
+                                    }px)`, // Adjust 20px padding as needed
+                                    overflowY: "auto",
+                                  }}
+                                >
+                                  {" "}
                                   {subItem.items.map((nestedItem) => (
                                     <button
                                       key={nestedItem.to}

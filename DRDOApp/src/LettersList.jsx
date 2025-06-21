@@ -1,5 +1,18 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import {
+  FileText, // For the main heading
+  Search, // For the search bar
+  FileWarning, // For no results
+  Download, // For download button
+  Loader2, // For loading spinner
+  Tag, // For categories/badges
+  Hash, // For Letter ID, Docket No, Letter No
+  Calendar, // For dates
+  BookOpen, // For language
+  User, // For communicated by / uploaded by
+  Building2, // For establishment
+} from "lucide-react"; // Make sure to install lucide-react if you haven't: npm install lucide-react
 
 const apiUrl = import.meta.env.VITE_API_URL || "http://localhost:5000";
 
@@ -17,10 +30,18 @@ export default function LettersList() {
         const res = await axios.get(`${apiUrl}/api/dac`, {
           headers: { Authorization: `Bearer ${token}` },
         });
-        setLetters(res.data);
-        setFiltered(res.data);
+        // Sort letters by upload date (newest first)
+        const sortedLetters = res.data.sort(
+          (a, b) => new Date(b.letterUploadDate) - new Date(a.letterUploadDate)
+        );
+        setLetters(sortedLetters);
+        setFiltered(sortedLetters);
       } catch (err) {
-        setError(err.response?.data?.error || "Something went wrong");
+        console.error("Error fetching letters:", err);
+        setError(
+          err.response?.data?.error ||
+            "Failed to fetch letters. Please try again."
+        );
       } finally {
         setLoading(false);
       }
@@ -29,203 +50,248 @@ export default function LettersList() {
   }, []);
 
   useEffect(() => {
-    if (!search) {
+    const query = search.toLowerCase().trim();
+
+    if (!query) {
       setFiltered(letters);
       return;
     }
-    const q = search.toLowerCase();
+
     setFiltered(
       letters.filter(
         (l) =>
-          l.letterSub.toLowerCase().includes(q) ||
-          l.docketNo.toLowerCase().includes(q) ||
-          l.letterNo.toLowerCase().includes(q) ||
-          l.category.toLowerCase().includes(q) ||
-          l.establishment.toLowerCase().includes(q) ||
-          // Added new fields to search
-          l.letterLanguage.toLowerCase().includes(q) ||
-          l.letterCommunBy.toLowerCase().includes(q) ||
-          (l.letterId && l.letterId.toString().includes(q)) // Search by letterId
+          l.letterSub?.toLowerCase().includes(query) ||
+          l.docketNo?.toLowerCase().includes(query) ||
+          l.letterNo?.toLowerCase().includes(query) ||
+          l.category?.toLowerCase().includes(query) ||
+          l.establishment?.toLowerCase().includes(query) ||
+          l.letterLanguage?.toLowerCase().includes(query) ||
+          l.letterCommunBy?.toLowerCase().includes(query) ||
+          (l.letterId && l.letterId.toString().includes(query)) ||
+          l.uploadedBy?.name?.toLowerCase().includes(query) // Added search by uploader name
       )
     );
   }, [search, letters]);
 
-  if (loading)
-    return (
-      <div className="flex justify-center items-center h-screen bg-gray-50">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600"></div>
-        <p className="ml-4 text-lg text-gray-600">Loading letters...</p>
-      </div>
-    );
-  if (error)
-    return (
-      <div className="flex justify-center items-center h-screen bg-gray-50">
-        <p className="text-xl text-red-600 font-semibold">
-          Error loading letters: {error}
-        </p>
-      </div>
-    );
+  const renderLoading = () => (
+    <div className="flex flex-col items-center justify-center min-h-[70vh] bg-gray-50 rounded-lg shadow-inner">
+      <Loader2 className="w-16 h-16 text-indigo-600 animate-spin mb-4" />
+      <p className="text-xl text-gray-700 font-medium">
+        Loading correspondence...
+      </p>
+    </div>
+  );
+
+  const renderError = () => (
+    <div className="flex flex-col items-center justify-center min-h-[70vh] bg-red-50 rounded-lg shadow-inner p-6">
+      <FileWarning className="w-16 h-16 text-red-500 mb-4" />
+      <p className="text-2xl text-red-700 font-semibold text-center">
+        Error: {error}
+      </p>
+      <p className="text-md text-red-600 mt-2">
+        Please try refreshing the page or contact support if the issue persists.
+      </p>
+    </div>
+  );
+
+  const renderNoResults = () => (
+    <div className="text-center py-16 bg-white rounded-xl shadow-md border border-gray-200">
+      <FileWarning className="mx-auto h-20 w-20 text-gray-400 mb-6" />
+      <h3 className="mt-2 text-2xl font-semibold text-gray-900">
+        No letters found
+      </h3>
+      <p className="mt-1 text-md text-gray-500">
+        Adjust your search criteria or try again later.
+      </p>
+    </div>
+  );
+
+  const formatDate = (dateString) => {
+    if (!dateString) return "N/A";
+    try {
+      return new Date(dateString).toLocaleDateString("en-IN", {
+        day: "2-digit",
+        month: "short",
+        year: "numeric",
+      });
+    } catch (e) {
+      console.error("Invalid date string:", dateString, e);
+      return "Invalid Date";
+    }
+  };
+
+  const formatDateTime = (dateString) => {
+    if (!dateString) return "N/A";
+    try {
+      return new Date(dateString).toLocaleDateString("en-IN", {
+        day: "2-digit",
+        month: "short",
+        year: "numeric",
+        hour: "2-digit",
+        minute: "2-digit",
+        hour12: true,
+      });
+    } catch (e) {
+      console.error("Invalid date string:", dateString, e);
+      return "Invalid Date";
+    }
+  };
+
+  if (loading) return renderLoading();
+  if (error) return renderError();
 
   return (
-    <div className=" bg-gray-50 p-4 sm:p-6 lg:p-8">
+    <div className="min-h-screen bg-gray-100 py-10 px-4 sm:px-6 lg:px-8 mt-16">
       <div className=" mx-auto">
         {/* Page Header */}
-        <h1 className="text-3xl sm:text-4xl font-extrabold text-gray-900 mb-8 text-center mt-14 tracking-tight">
+        <h1 className="text-4xl sm:text-5xl font-extrabold text-gray-900 mb-10 text-center flex items-center justify-center">
+          <FileText className="h-12 w-12 text-indigo-600 mr-4" />
           Letters & Correspondence
         </h1>
 
         {/* Search Bar */}
-        <div className="relative mb-8 shadow-sm rounded-lg bg-white">
-          <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-            <svg
-              className="h-5 w-5 text-gray-400"
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 20 20"
-              fill="currentColor"
-              aria-hidden="true"
-            >
-              <path
-                fillRule="evenodd"
-                d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"
-                clipRule="evenodd"
-              />
-            </svg>
+        <div className="relative mb-10 rounded-xl shadow-lg bg-white border border-gray-200">
+          <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+            <Search className="h-6 w-6 text-gray-400" />
           </div>
           <input
             type="text"
-            placeholder="Search by subject, docket #, letter #, category, establishment, language, communicated by, or Letter ID..."
+            placeholder="Search by subject, docket #, letter #, category, establishment, language, communicated by, letter ID, or uploader..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg leading-5 bg-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent sm:text-sm transition duration-150 ease-in-out"
+            className="block w-full pl-12 pr-4 py-3 border border-transparent rounded-xl leading-6 bg-white placeholder-gray-500 focus:outline-none focus:ring-3 focus:ring-indigo-500 focus:border-transparent text-gray-900 text-lg transition duration-200 ease-in-out shadow-sm"
           />
         </div>
 
-        {/* No results */}
+        {/* Letters Grid */}
         {filtered.length === 0 ? (
-          <div className="text-center py-10 bg-white rounded-lg shadow-sm">
-            <p className="text-lg text-gray-600">
-              No letters found matching your search.
-            </p>
-          </div>
+          renderNoResults()
         ) : (
-          /* Grid of cards */
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
             {filtered.map((letter) => (
               <div
                 key={letter._id}
-                className="bg-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 p-5 flex flex-col justify-between border border-gray-200"
+                className="bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 p-6 flex flex-col justify-between border border-gray-200 group"
               >
                 {/* Header */}
-                <h3 className="text-xl font-bold text-gray-900 mb-3 leading-tight">
-                  {letter.letterSub}
+                <h3 className="text-2xl font-bold text-gray-900 mb-4 leading-tight group-hover:text-indigo-700 transition-colors duration-200">
+                  {letter.letterSub || "No Subject"}
                 </h3>
 
                 {/* Content */}
-                <div className="space-y-3 text-base text-gray-700 mb-4">
-                  {/* Increased font size for content fields */}
-                  <p>
-                    <span className="font-semibold text-gray-800">Letter ID:</span>{" "}
-                    <span className="bg-blue-100 text-blue-800 px-2 py-0.5 rounded-full text-xs font-medium">
+                <div className="space-y-3 text-base text-gray-700 mb-6 flex-grow">
+                  <p className="flex items-center">
+                    <Hash className="h-5 w-5 text-gray-500 mr-2 flex-shrink-0" />
+                    <span className="font-semibold text-gray-800">
+                      Letter ID:
+                    </span>{" "}
+                    <span className="ml-2 bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm font-medium tracking-wide">
                       {letter.letterId || "N/A"}
                     </span>
                   </p>
-                  <p>
-                    <span className="font-semibold text-gray-800">Docket No:</span>{" "}
-                    <span className="bg-indigo-100 text-indigo-800 px-2 py-0.5 rounded-full text-xs font-medium">
-                      {letter.docketNo}
+                  <p className="flex items-center">
+                    <Hash className="h-5 w-5 text-gray-500 mr-2 flex-shrink-0" />
+                    <span className="font-semibold text-gray-800">
+                      Docket No:
+                    </span>{" "}
+                    <span className="ml-2 bg-indigo-100 text-indigo-800 px-3 py-1 rounded-full text-sm font-medium tracking-wide">
+                      {letter.docketNo || "N/A"}
                     </span>
                   </p>
-                  <p>
-                    <span className="font-semibold text-gray-800">Letter No:</span>{" "}
-                    {letter.letterNo}
-                  </p>
-                  <p>
-                    <span className="font-semibold text-gray-800">Letter Date:</span>{" "}
-                    {new Date(letter.letterDate).toLocaleDateString("en-IN", {
-                      day: "2-digit",
-                      month: "short",
-                      year: "numeric",
-                    })}
-                  </p>
-                  <p>
-                    <span className="font-semibold text-gray-800">Docket Date:</span>{" "}
-                    {letter.docketDate ? new Date(letter.docketDate).toLocaleDateString("en-IN", {
-                      day: "2-digit",
-                      month: "short",
-                      year: "numeric",
-                    }) : "N/A"}
-                  </p>
-                  <p>
-                    <span className="font-semibold text-gray-800">Category:</span>{" "}
-                    <span className="bg-purple-100 text-purple-800 px-2 py-0.5 rounded-full text-xs font-medium">
-                      {letter.category}
+                  <p className="flex items-center">
+                    <Hash className="h-5 w-5 text-gray-500 mr-2 flex-shrink-0" />
+                    <span className="font-semibold text-gray-800">
+                      Letter No:
+                    </span>{" "}
+                    <span className="ml-2 text-gray-700">
+                      {letter.letterNo || "N/A"}
                     </span>
                   </p>
-                  <p>
-                    <span className="font-semibold text-gray-800">Establishment:</span>{" "}
-                    <span className="bg-green-100 text-green-800 px-2 py-0.5 rounded-full text-xs font-medium">
-                      {letter.establishment}
+                  <p className="flex items-center">
+                    <Calendar className="h-5 w-5 text-gray-500 mr-2 flex-shrink-0" />
+                    <span className="font-semibold text-gray-800">
+                      Letter Date:
+                    </span>{" "}
+                    <span className="ml-2 text-gray-700">
+                      {formatDate(letter.letterDate)}
                     </span>
                   </p>
-                  <p>
-                    <span className="font-semibold text-gray-800">Letter Language:</span>{" "}
-                    {letter.letterLanguage || "N/A"}
+                  <p className="flex items-center">
+                    <Calendar className="h-5 w-5 text-gray-500 mr-2 flex-shrink-0" />
+                    <span className="font-semibold text-gray-800">
+                      Docket Date:
+                    </span>{" "}
+                    <span className="ml-2 text-gray-700">
+                      {formatDate(letter.docketDate)}
+                    </span>
                   </p>
-                  <p>
-                    <span className="font-semibold text-gray-800">Communicated By:</span>{" "}
-                    {letter.letterCommunBy || "N/A"}
+                  <p className="flex items-center">
+                    <Tag className="h-5 w-5 text-gray-500 mr-2 flex-shrink-0" />
+                    <span className="font-semibold text-gray-800">
+                      Category:
+                    </span>{" "}
+                    <span className="ml-2 bg-purple-100 text-purple-800 px-3 py-1 rounded-full text-sm font-medium tracking-wide">
+                      {letter.category || "N/A"}
+                    </span>
                   </p>
-                  <p className="flex items-center text-sm text-gray-500 mt-2">
-                    <svg
-                      className="w-4 h-4 mr-1"
-                      fill="currentColor"
-                      viewBox="0 0 20 20"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <path
-                        fillRule="evenodd"
-                        d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z"
-                        clipRule="evenodd"
-                      />
-                    </svg>
-                    Uploaded By: {letter.uploadedBy?.name || "N/A"}
+                  <p className="flex items-center">
+                    <Building2 className="h-5 w-5 text-gray-500 mr-2 flex-shrink-0" />
+                    <span className="font-semibold text-gray-800">
+                      Establishment:
+                    </span>{" "}
+                    <span className="ml-2 bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm font-medium tracking-wide">
+                      {letter.establishment || "N/A"}
+                    </span>
                   </p>
-                  <p className="text-sm text-gray-500">
-                    <span className="font-semibold text-gray-800">Uploaded On:</span>{" "}
-                    {new Date(letter.letterUploadDate).toLocaleDateString("en-IN", {
-                      day: "2-digit",
-                      month: "short",
-                      year: "numeric",
-                      hour: "2-digit",
-                      minute: "2-digit",
-                    })}
+                  <p className="flex items-center">
+                    <BookOpen className="h-5 w-5 text-gray-500 mr-2 flex-shrink-0" />
+                    <span className="font-semibold text-gray-800">
+                      Language:
+                    </span>{" "}
+                    <span className="ml-2 text-gray-700">
+                      {letter.letterLanguage || "N/A"}
+                    </span>
+                  </p>
+                  <p className="flex items-center">
+                    <User className="h-5 w-5 text-gray-500 mr-2 flex-shrink-0" />
+                    <span className="font-semibold text-gray-800">
+                      Communicated By:
+                    </span>{" "}
+                    <span className="ml-2 text-gray-700">
+                      {letter.letterCommunBy || "N/A"}
+                    </span>
                   </p>
                 </div>
 
-                {/* Download link */}
-                {letter.fileName && (
-                  <a
-                    href={`${apiUrl}/uploads/letters/${letter.fileName}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="mt-auto inline-flex items-center justify-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition duration-150 ease-in-out"
-                  >
-                    <svg
-                      className="-ml-1 mr-2 h-5 w-5"
-                      xmlns="http://www.w3.org/2000/svg"
-                      viewBox="0 0 20 20"
-                      fill="currentColor"
-                      aria-hidden="true"
+                {/* Footer with Uploader Info and Download */}
+                <div className="border-t border-gray-100 pt-4 mt-auto">
+                  <p className="flex items-center text-sm text-gray-500 mb-3">
+                    <User className="w-4 h-4 mr-2 text-gray-400" />
+                    Uploaded By:{" "}
+                    <span className="font-medium text-gray-700 ml-1">
+                      {letter.uploadedBy?.name || "N/A"}
+                    </span>
+                  </p>
+                  <p className="text-sm text-gray-500 mb-4">
+                    <Calendar className="w-4 h-4 inline-block mr-2 text-gray-400" />
+                    Uploaded On:{" "}
+                    <span className="font-medium text-gray-700 ml-1">
+                      {formatDateTime(letter.letterUploadDate)}
+                    </span>
+                  </p>
+
+                  {letter.fileName && (
+                    <a
+                      href={`${apiUrl}/uploads/letters/${letter.fileName}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="w-full inline-flex items-center justify-center px-4 py-2.5 border border-transparent text-base font-medium rounded-lg shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition duration-150 ease-in-out"
                     >
-                      <path
-                        fillRule="evenodd"
-                        d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm3.293-7.707a1 1 0 011.414 0L9 10.586V3a1 1 0 112 0v7.586l1.293-1.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z"
-                        clipRule="evenodd"
-                      />
-                    </svg>
-                    Download File
-                  </a>
-                )}
+                      <Download className="-ml-1 mr-3 h-5 w-5" />
+                      Download File
+                    </a>
+                  )}
+                </div>
               </div>
             ))}
           </div>

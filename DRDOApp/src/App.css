@@ -53,3 +53,31 @@
   -ms-overflow-style: none; /* IE and Edge */
   scrollbar-width: none; /* Firefox */
 }
+
+.scroll-box {
+  height: 300px;
+  overflow: hidden;
+  position: relative;
+  background-color: #f9f9f9;
+  border-radius: 0.5rem;
+}
+
+.scroll-content {
+  display: flex;
+  flex-direction: column;
+  animation: scroll-up 15s linear infinite;
+}
+
+.scroll-item {
+  padding: 1rem 0.5rem;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+@keyframes scroll-up {
+  0% {
+    transform: translateY(0%);
+  }
+  100% {
+    transform: translateY(-50%);
+  }
+}

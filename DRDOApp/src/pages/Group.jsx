@@ -17,7 +17,7 @@ const Groups = () => {
   return (
     <div className="p-4">
       <h1 className="text-xl font-semibold mb-4">Groups</h1>
-      
+
       {/* Only show the button if the user is an admin */}
       {localStorage.getItem("role") === "admin" && (
         <Link to="/add-group">
@@ -26,7 +26,7 @@ const Groups = () => {
           </button>
         </Link>
       )}
-      
+
       <div>
         {groups.map((group) => (
           <div key={group._id} className="border-b py-2">

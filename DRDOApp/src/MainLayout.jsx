@@ -26,7 +26,7 @@ export default function MainLayout() {
       <DocumentMarquee />
       <TopNavbar />
       <Navbar />
-      <InfiniteLabPhotos labId={labId} />
+      {/* <InfiniteLabPhotos labId={labId} /> */}
       <main className="flex-grow mt-[230px]">
         <Outlet />
       </main>
