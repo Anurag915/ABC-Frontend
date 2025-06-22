@@ -32,36 +32,24 @@ export default function Navbar() {
 
   const navRef = useRef(null);
   const mobileMenuRef = useRef(null);
-  const [user, setUser] = useState(null);
+  // const [user, setUser] = useState(null); // This state isn't used, can be removed if not fetching user profile here
 
-  // useEffect(() => {
-  //   const fetchUser = async () => {
-  //     try {
-  //       const res = await axiosInstance.get("/api/users/me");
-  //       setUser(res.data);
-  //     } catch (err) {
-  //       console.error("Error fetching user profile", err);
-  //     }
-  //   };
-
-  //   if (isLoggedIn) {
-  //     fetchUser();
-  //   }
-  // }, [isLoggedIn]);
-
+  // Adjust topOffset based on marquee and top-navbar height
   useEffect(() => {
     const updateOffset = () => {
-      const marqueeHeight = 40;
-      const topNavbarEl = document.querySelector(".top-navbar");
+      // Assuming marquee is the first element on the page
+      const marqueeHeight = 40; // You hardcoded this, if it's dynamic, use DOM lookup
+      const topNavbarEl = document.querySelector(".top-navbar"); // Replace with actual top-navbar class/id if different
       const topNavbarHeight = topNavbarEl?.offsetHeight || 0;
       setTopOffset(marqueeHeight + topNavbarHeight);
     };
 
-    updateOffset();
-    window.addEventListener("resize", updateOffset);
-    return () => window.removeEventListener("resize", updateOffset);
+    updateOffset(); // Set initial offset
+    window.addEventListener("resize", updateOffset); // Update on resize
+    return () => window.removeEventListener("resize", updateOffset); // Cleanup
   }, []);
 
+  // Fetch labs
   useEffect(() => {
     axios
       .get(`${apiUrl}/api/labs`)
@@ -69,23 +57,31 @@ export default function Navbar() {
       .catch((err) => console.error("Failed to fetch labs:", err));
   }, []);
 
+  // Check login status and user role from localStorage
   useEffect(() => {
     const token = localStorage.getItem("token");
     setIsLoggedIn(!!token);
-    setUserRole(localStorage.getItem("role"));
+    const roleFromStorage = localStorage.getItem("role");
+    setUserRole(roleFromStorage);
   }, [pathname]);
 
+  // Fetch groups
   useEffect(() => {
     axios
       .get(`${apiUrl}/api/groups/name`)
-      .then((res) => setGroups(res.data))
+      .then((res) => {
+        setGroups(res.data);
+        console.log("Fetched groups:", res.data); // <--- ADDED LOG
+      })
       .catch((err) => console.error("Failed to fetch groups:", err));
   }, []);
 
+  // Handle user logout
   const handleLogout = () => {
     localStorage.clear();
     setIsLoggedIn(false);
     setUserRole(null);
+    // Close all menus upon logout
     setOpenAccount(false);
     setIsOpen(false);
     setOpenDesktopMainDropdown(null);
@@ -95,8 +91,8 @@ export default function Navbar() {
     navigate("/login");
   };
 
+  // Close all menus on route change
   useEffect(() => {
-    // Close all menus on route change
     setIsOpen(false);
     setOpenDesktopMainDropdown(null);
     setOpenDesktopNestedDropdown(null);
@@ -105,30 +101,92 @@ export default function Navbar() {
     setOpenAccount(false);
   }, [pathname]);
 
+  // Handle clicks outside to close dropdowns
+  // useEffect(() => {
+  //   const handleClickOutside = (event) => {
+  //     // Close desktop main dropdowns and nested dropdowns
+  //     if (navRef.current && !navRef.current.contains(event.target)) {
+  //       console.log("handleClickOutside: Closing desktop main dropdowns."); // ADDED LOG
+  //       setOpenDesktopMainDropdown(null);
+  //       setOpenDesktopNestedDropdown(null);
+  //     }
+  //     // Close desktop account dropdown
+  //     if (
+  //       event.target.closest(".my-account-button") === null &&
+  //       event.target.closest(".account-dropdown-menu") === null &&
+  //       openAccount
+  //     ) {
+  //       console.log("handleClickOutside: Closing account dropdown."); // ADDED LOG
+  //       setOpenAccount(false);
+  //     }
+
+  //     // Close mobile menu if clicked outside the mobile menu container and the hamburger icon
+  //     if (
+  //       mobileMenuRef.current &&
+  //       !mobileMenuRef.current.contains(event.target) &&
+  //       !event.target.closest(".mobile-menu-toggle")
+  //     ) {
+  //       console.log("handleClickOutside: Closing mobile menu."); // ADDED LOG
+  //       setIsOpen(false);
+  //       setOpenMobileMainDropdown(null); // Also close any mobile sub-dropdowns
+  //       setOpenMobileNestedDropdown(null);
+  //     }
+  //   };
+
+  //   document.addEventListener("mousedown", handleClickOutside);
+  //   return () => {
+  //     document.removeEventListener("mousedown", handleClickOutside);
+  //   };
+  // }, [openDesktopMainDropdown, openDesktopNestedDropdown, openAccount, isOpen]);
+
+  // Handle clicks outside to close dropdowns
   useEffect(() => {
     const handleClickOutside = (event) => {
-      // Close desktop main dropdowns and nested dropdowns
-      if (navRef.current && !navRef.current.contains(event.target)) {
+      // Check if the click occurred inside the main navigation area.
+      // If it did, we assume a button within the nav was clicked,
+      // and its specific onClick handler should manage the state.
+      // So, we do NOT close anything from this handler.
+      if (navRef.current && navRef.current.contains(event.target)) {
+        // console.log("handleClickOutside: Click inside navRef. Not closing via this handler."); // For verbose debugging
+        return;
+      }
+
+      // If the click was NOT inside navRef, then it's genuinely outside.
+      // Close all desktop main and nested dropdowns.
+      if (
+        openDesktopMainDropdown !== null ||
+        openDesktopNestedDropdown !== null
+      ) {
+        console.log(
+          "handleClickOutside: Closing ALL desktop dropdowns (clicked outside nav)."
+        );
         setOpenDesktopMainDropdown(null);
         setOpenDesktopNestedDropdown(null);
       }
-      // Close desktop account dropdown
+
+      // Close desktop account dropdown if it's open and the click was outside its specific elements
       if (
         event.target.closest(".my-account-button") === null &&
         event.target.closest(".account-dropdown-menu") === null &&
         openAccount
       ) {
+        console.log(
+          "handleClickOutside: Closing account dropdown (clicked outside account elements)."
+        );
         setOpenAccount(false);
       }
 
-      // Close mobile menu if clicked outside the mobile menu container and the hamburger icon
+      // Close mobile menu if clicked outside its container and the toggle icon
       if (
         mobileMenuRef.current &&
         !mobileMenuRef.current.contains(event.target) &&
         !event.target.closest(".mobile-menu-toggle")
       ) {
+        console.log(
+          "handleClickOutside: Closing mobile menu (clicked outside mobile menu/toggle)."
+        );
         setIsOpen(false);
-        setOpenMobileMainDropdown(null); // Also close any mobile sub-dropdowns
+        setOpenMobileMainDropdown(null);
         setOpenMobileNestedDropdown(null);
       }
     };
@@ -137,13 +195,15 @@ export default function Navbar() {
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
-  }, [openDesktopMainDropdown, openDesktopNestedDropdown, openAccount, isOpen]);
+  }, [openDesktopMainDropdown, openDesktopNestedDropdown, openAccount, isOpen]); // Dependencies should include states managed
 
+  // Account dropdown items
   const accountItems = [
     { label: "View Profile", to: "/profile" },
     { label: "Sign Out", action: handleLogout },
   ];
 
+  // Main navigation items array - conditionally rendered
   const navItems = [
     { label: "Home", to: "/" },
 
@@ -157,8 +217,10 @@ export default function Navbar() {
               to: `/group/id/${group._id}`,
             })),
           },
+
+          // Admin Panel dropdown (only for admin role)
           userRole === "admin" && {
-            label: "Admin",
+            label: "Admin Panel",
             dropdown: true,
             items: [
               { label: "Add Lab", to: "/admin/add-labs" },
@@ -176,26 +238,32 @@ export default function Navbar() {
               { label: "Approve Users", to: "/admin/approval" },
               { label: "Logs", to: "/admin/logs" },
               { label: "Manage Gallery", to: "/admin/manageGallery" },
-              (userRole === "admin" || userRole === "director") && {
-                label: "All Letters",
-                to: "/allLetter",
-              },
-              (userRole === "admin" || userRole === "director") && {
-                label: "All Software Repositories",
-                to: "/view-repo",
-              },
-              (userRole === "admin" || userRole === "director") && {
-                label: "All Trial Repositories",
-                to: "/view-trialRepo",
-              },
-              (userRole === "admin" || userRole === "associate_director") && {
-                label: "Software Repository Upload",
-                to: "/upload-repo",
-              },
-              (userRole === "admin" || userRole === "associate_director") && {
-                label: "Trial Repository Upload",
-                to: "/upload-trialRepo",
-              },
+              { label: "All Letters", to: "/allLetter" },
+              { label: "All Software Repositories", to: "/view-repo" },
+              { label: "All Trial Repositories", to: "/view-trialRepo" },
+              { label: "Software Repository Upload", to: "/upload-repo" },
+              { label: "Trial Repository Upload", to: "/upload-trialRepo" },
+            ].filter(Boolean),
+          },
+
+          // Director Panel dropdown (only for director role)
+          userRole === "director" && {
+            label: "Director Panel", // New label for directors
+            dropdown: true,
+            items: [
+              { label: "All Letters", to: "/allLetter" },
+              { label: "All Software Repositories", to: "/view-repo" },
+              { label: "All Trial Repositories", to: "/view-trialRepo" },
+            ].filter(Boolean),
+          },
+
+          // Associate Director Panel dropdown (only for associate_director role)
+          userRole === "associate_director" && {
+            label: "Associate Director Panel", // New label for associate directors
+            dropdown: true,
+            items: [
+              { label: "Software Repository Upload", to: "/upload-repo" },
+              { label: "Trial Repository Upload", to: "/upload-trialRepo" },
             ].filter(Boolean),
           },
 
@@ -204,237 +272,210 @@ export default function Navbar() {
             to: "/dac",
           },
           { label: "Close Group Docs", to: "/closeGroup" },
-        ].filter(Boolean)
+        ].filter(Boolean) // Removes any 'false' entries from the outer array
       : [{ label: "Login", to: "/login" }]),
-  ].filter(Boolean);
+  ].filter(Boolean); // Final filter for the entire navItems array
 
   return (
     <nav
       ref={navRef}
-      className="main-navbar bg-[#003168] text-white shadow-lg w-full z-50"
+      className="main-navbar bg-[#003168] text-white shadow-lg w-full z-50 overflow-visible"
       style={{ top: `${topOffset}px`, position: "fixed" }}
     >
       <div className="flex items-center justify-between h-24 w-full px-2">
-        {/* Logo */}
-        {/* <div
-          className="text-2xl font-bold text-white cursor-pointer"
-          onClick={() => {
-            setIsOpen(false);
-            setOpenDesktopMainDropdown(null);
-            setOpenDesktopNestedDropdown(null);
-            setOpenMobileMainDropdown(null);
-            setOpenMobileNestedDropdown(null);
-            setOpenAccount(false);
-            navigate("/");
-          }}
-        >
-          DRDO
-        </div> */}
+  {/* Desktop Menu */}
+  <div className="hidden md:flex space-x-6 items-center relative">
+    {navItems.map((item) => {
+      const isDropdownCurrentlyOpen = openDesktopMainDropdown === item.label;
+      const isNavLinkActive = item.to && pathname === item.to;
 
-        {/* Desktop Menu */}
-        <div className="hidden md:flex space-x-6 items-center relative">
-          {navItems.map((item) => {
-            const isNavLinkActive = item.to && pathname === item.to;
-            const isDropdownActive =
-              item.dropdown &&
-              item.items.some(
-                (subItem) =>
-                  pathname === subItem.to ||
-                  (subItem.dropdown &&
-                    subItem.items.some(
-                      (nestedItem) => pathname === nestedItem.to
-                    ))
-              );
+      if (item.dropdown) {
+        return (
+          <div key={item.label} className="relative group">
+            <button
+              onClick={() => {
+                setOpenDesktopMainDropdown((prev) =>
+                  prev === item.label ? null : item.label
+                );
+                if (openDesktopMainDropdown !== item.label) {
+                  setOpenDesktopNestedDropdown(null);
+                }
+              }}
+              className={`px-4 py-2 rounded-md text-base font-medium flex items-center gap-1 transition duration-300 ${
+                isDropdownCurrentlyOpen
+                  ? "bg-[#0066cc] text-white"
+                  : "hover:bg-[#004b99]"
+              }`}
+            >
+              {item.label}
+              {isDropdownCurrentlyOpen ? <FaChevronUp /> : <FaChevronDown />}
+            </button>
 
-            if (item.dropdown) {
-              return (
-                <div key={item.label} className="relative group">
-                  <button
-                    onClick={() => {
-                      setOpenDesktopMainDropdown((prev) =>
-                        prev === item.label ? null : item.label
-                      );
-                      // Close nested dropdown if main dropdown is changing
-                      if (openDesktopMainDropdown !== item.label) {
-                        setOpenDesktopNestedDropdown(null);
-                      }
-                    }}
-                    className={`px-4 py-2 rounded-md text-base font-medium flex items-center gap-1 transition duration-300 ${
-                      openDesktopMainDropdown === item.label ||
-                      isDropdownActive ||
-                      isNavLinkActive
-                        ? "bg-[#0066cc] text-white"
-                        : "hover:bg-[#004b99]"
-                    }`}
-                  >
-                    {item.label}
-                    {openDesktopMainDropdown === item.label ? (
-                      <FaChevronUp />
-                    ) : (
-                      <FaChevronDown />
-                    )}
-                  </button>
-                  {openDesktopMainDropdown === item.label && (
-                    <div
-                      className="absolute bg-[#004b99] rounded-md mt-1 w-56 shadow-lg z-50"
-                      style={{
-                        maxHeight: `calc(100vh - ${topOffset + 96 + 20}px)`, // Adjust 20px padding as needed
-                        overflowY: "auto",
-                      }}
-                    >
-                      {" "}
-                      {item.items && item.items.length > 0 ? (
-                        item.items.map((subItem) =>
-                          subItem.dropdown ? (
-                            <div key={subItem.label} className="relative">
-                              <button
-                                onClick={() =>
-                                  setOpenDesktopNestedDropdown((prev) =>
-                                    prev === subItem.label
-                                      ? null
-                                      : subItem.label
-                                  )
-                                }
-                                className={`block w-full text-left px-4 py-2 text-white flex justify-between items-center transition duration-200 hover:bg-[#0066cc] ${
-                                  openDesktopNestedDropdown === subItem.label
-                                    ? "bg-[#0066cc]"
-                                    : ""
-                                }`}
-                              >
-                                {subItem.label}
-                                {openDesktopNestedDropdown === subItem.label ? (
-                                  <FaChevronUp className="ml-2" />
-                                ) : (
-                                  <FaChevronDown className="ml-2" />
-                                )}
-                              </button>
-                              {openDesktopNestedDropdown === subItem.label && (
-                                <div
-                                  className="absolute left-full top-0 ml-1 bg-[#004b99] rounded-md w-56 shadow-lg z-50"
-                                  style={{
-                                    maxHeight: `calc(100vh - ${
-                                      topOffset + 96 + 20
-                                    }px)`, // Adjust 20px padding as needed
-                                    overflowY: "auto",
-                                  }}
-                                >
-                                  {" "}
-                                  {subItem.items.map((nestedItem) => (
-                                    <button
-                                      key={nestedItem.to}
-                                      onClick={() => {
-                                        setOpenDesktopMainDropdown(null);
-                                        setOpenDesktopNestedDropdown(null); // Close nested too
-                                        setOpenAccount(false);
-                                        setIsOpen(false);
-                                        setOpenMobileMainDropdown(null);
-                                        setOpenMobileNestedDropdown(null);
-                                        navigate(nestedItem.to);
-                                      }}
-                                      className={`block w-full text-left px-4 py-2 text-white transition duration-200 hover:bg-[#0066cc] ${
-                                        pathname === nestedItem.to
-                                          ? "bg-[#0066cc]"
-                                          : ""
-                                      }`}
-                                    >
-                                      {nestedItem.label}
-                                    </button>
-                                  ))}
-                                </div>
-                              )}
-                            </div>
+            {isDropdownCurrentlyOpen && (
+              <div
+                className="absolute left-0 top-full mt-1 bg-[#004b99] rounded-md w-56 shadow-lg z-[9999] overflow-visible"
+                style={{
+                  maxHeight: `calc(100vh - ${topOffset + 96 + 20}px)`,
+                  overflowY: "auto",
+                }}
+              >
+                {item.items && item.items.length > 0 ? (
+                  item.items.map((subItem) =>
+                    subItem.dropdown ? (
+                      <div key={subItem.label} className="relative">
+                        <button
+                          onClick={() =>
+                            setOpenDesktopNestedDropdown((prev) =>
+                              prev === subItem.label ? null : subItem.label
+                            )
+                          }
+                          className={`block w-full text-left px-4 py-2 text-white flex justify-between items-center transition duration-200 hover:bg-[#0066cc] ${
+                            openDesktopNestedDropdown === subItem.label
+                              ? "bg-[#0066cc]"
+                              : ""
+                          }`}
+                        >
+                          {subItem.label}
+                          {openDesktopNestedDropdown === subItem.label ? (
+                            <FaChevronUp className="ml-2" />
                           ) : (
-                            <button
-                              key={subItem.to}
-                              onClick={() => {
-                                setOpenDesktopMainDropdown(null);
-                                setOpenDesktopNestedDropdown(null); // Close nested too
-                                setOpenAccount(false);
-                                navigate(subItem.to);
-                              }}
-                              className={`block w-full text-left px-4 py-2 text-white transition duration-200 hover:bg-[#0066cc] ${
-                                pathname === subItem.to ? "bg-[#0066cc]" : ""
-                              }`}
-                            >
-                              {subItem.label}
-                            </button>
-                          )
-                        )
-                      ) : (
-                        <div className="px-4 py-2 text-sm text-white opacity-75 italic">
-                          No items
-                        </div>
-                      )}
-                    </div>
-                  )}
-                </div>
-              );
-            } else {
-              return (
-                <button
-                  key={item.label}
-                  onClick={() => {
-                    setOpenDesktopMainDropdown(null);
-                    setOpenDesktopNestedDropdown(null); // Close nested too
-                    setOpenAccount(false);
-                    item.action ? item.action() : navigate(item.to);
-                  }}
-                  className={`px-4 py-2 rounded-md text-base font-medium transition duration-300 ${
-                    isNavLinkActive
-                      ? "bg-[#0066cc] text-white"
-                      : "hover:bg-[#004b99]"
-                  }`}
-                >
-                  {item.label}
-                </button>
-              );
-            }
-          })}
+                            <FaChevronDown className="ml-2" />
+                          )}
+                        </button>
 
-          {/* My Account Desktop Dropdown */}
-          {isLoggedIn && (
-            <div className="relative">
+                        {openDesktopNestedDropdown === subItem.label && (
+                          <div
+                            className="absolute left-0 top-full mt-1 bg-[#004b99] rounded-md w-56 shadow-xl z-[9999] min-w-[12rem] overflow-visible"
+                            style={{
+                              maxHeight: `calc(100vh - ${
+                                topOffset + 96 + 20
+                              }px)`,
+                              overflowY: "auto",
+                            }}
+                          >
+                            {subItem.items && subItem.items.length > 0 ? (
+                              subItem.items.map((nestedItem) => (
+                                <button
+                                  key={nestedItem.to}
+                                  onClick={() => {
+                                    setOpenDesktopMainDropdown(null);
+                                    setOpenDesktopNestedDropdown(null);
+                                    setOpenAccount(false);
+                                    setIsOpen(false);
+                                    setOpenMobileMainDropdown(null);
+                                    setOpenMobileNestedDropdown(null);
+                                    navigate(nestedItem.to);
+                                  }}
+                                  className={`block w-full text-left px-4 py-2 text-white transition duration-200 hover:bg-[#0066cc] ${
+                                    pathname === nestedItem.to
+                                      ? "bg-[#0066cc]"
+                                      : ""
+                                  }`}
+                                >
+                                  {nestedItem.label}
+                                </button>
+                              ))
+                            ) : (
+                              <div className="px-4 py-2 text-sm text-white opacity-75 italic">
+                                No items
+                              </div>
+                            )}
+                          </div>
+                        )}
+                      </div>
+                    ) : (
+                      <button
+                        key={subItem.to}
+                        onClick={() => {
+                          setOpenDesktopMainDropdown(null);
+                          setOpenDesktopNestedDropdown(null);
+                          setOpenAccount(false);
+                          navigate(subItem.to);
+                        }}
+                        className={`block w-full text-left px-4 py-2 text-white transition duration-200 hover:bg-[#0066cc] ${
+                          pathname === subItem.to ? "bg-[#0066cc]" : ""
+                        }`}
+                      >
+                        {subItem.label}
+                      </button>
+                    )
+                  )
+                ) : (
+                  <div className="px-4 py-2 text-sm text-white opacity-75 italic">
+                    No items
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
+        );
+      } else {
+        return (
+          <button
+            key={item.label}
+            onClick={() => {
+              setOpenDesktopMainDropdown(null);
+              setOpenDesktopNestedDropdown(null);
+              setOpenAccount(false);
+              item.action ? item.action() : navigate(item.to);
+            }}
+            className={`px-4 py-2 rounded-md text-base font-medium transition duration-300 ${
+              isNavLinkActive
+                ? "bg-[#0066cc] text-white"
+                : "hover:bg-[#004b99]"
+            }`}
+          >
+            {item.label}
+          </button>
+        );
+      }
+    })}
+
+    {/* My Account Dropdown */}
+    {isLoggedIn && (
+      <div className="relative">
+        <button
+          onClick={() => setOpenAccount((prev) => !prev)}
+          className={`my-account-button px-4 py-2 rounded-md text-base font-medium flex items-center gap-1 transition duration-300 ${
+            openAccount ? "bg-[#0066cc] text-white" : "hover:bg-[#004b99]"
+          }`}
+        >
+          My Account
+          {openAccount ? <FaChevronUp /> : <FaChevronDown />}
+        </button>
+        {openAccount && (
+          <div className="absolute bg-[#004b99] rounded-md mt-1 w-48 shadow-lg z-[9999]">
+            {accountItems.map((item) => (
               <button
-                onClick={() => setOpenAccount((prev) => !prev)}
-                className={`my-account-button px-4 py-2 rounded-md text-base font-medium flex items-center gap-1 transition duration-300 ${
-                  openAccount ? "bg-[#0066cc] text-white" : "hover:bg-[#004b99]"
+                key={item.label}
+                onClick={() => {
+                  setOpenAccount(false);
+                  item.action ? item.action() : navigate(item.to);
+                }}
+                className={`block w-full text-left px-4 py-2 text-white transition duration-200 hover:bg-[#0066cc] ${
+                  pathname === item.to ? "bg-[#0066cc]" : ""
                 }`}
               >
-                My Account
-                {openAccount ? <FaChevronUp /> : <FaChevronDown />}
+                {item.label}
               </button>
-              {openAccount && (
-                <div className="account-dropdown-menu absolute bg-[#004b99] rounded-md mt-1 w-48 shadow-lg z-50">
-                  {accountItems.map((item) => (
-                    <button
-                      key={item.label}
-                      onClick={() => {
-                        setOpenAccount(false);
-                        item.action ? item.action() : navigate(item.to);
-                      }}
-                      className={`block w-full text-left px-4 py-2 text-white transition duration-200 hover:bg-[#0066cc] ${
-                        pathname === item.to ? "bg-[#0066cc]" : ""
-                      }`}
-                    >
-                      {item.label}
-                    </button>
-                  ))}
-                </div>
-              )}
-            </div>
-          )}
-        </div>
-
-        {/* Mobile Menu Icon (Hamburger/X) */}
-        <div className="md:hidden">
-          <button
-            onClick={() => setIsOpen(!isOpen)}
-            className="mobile-menu-toggle text-white hover:text-gray-300 focus:outline-none"
-          >
-            {isOpen ? <HiX size={28} /> : <HiMenu size={28} />}
-          </button>
-        </div>
+            ))}
+          </div>
+        )}
       </div>
+    )}
+  </div>
+
+  {/* Mobile Menu Toggle */}
+  <div className="md:hidden">
+    <button
+      onClick={() => setIsOpen(!isOpen)}
+      className="mobile-menu-toggle text-white hover:text-gray-300 focus:outline-none"
+    >
+      {isOpen ? <HiX size={28} /> : <HiMenu size={28} />}
+    </button>
+  </div>
+</div>
+
 
       {/* Mobile Menu Content */}
       {isOpen && (
@@ -500,29 +541,50 @@ export default function Navbar() {
                                   )}
                                 </button>
                                 {openMobileNestedDropdown === subItem.label && (
-                                  <div className="pl-4 mt-1 space-y-1">
-                                    {subItem.items.map((nestedItem) => (
-                                      <button
-                                        key={nestedItem.to}
-                                        onClick={() => {
-                                          setIsOpen(false);
-                                          setOpenMobileMainDropdown(null);
-                                          setOpenMobileNestedDropdown(null);
-                                          setOpenDesktopMainDropdown(null);
-                                          setOpenDesktopNestedDropdown(null);
-                                          setOpenAccount(false);
-                                          navigate(nestedItem.to);
-                                        }}
-                                        className={`block w-full text-left px-4 py-2 text-white transition duration-200 hover:bg-[#0066cc] ${
-                                          pathname === nestedItem.to
-                                            ? "bg-[#0066cc]"
-                                            : ""
-                                        }`}
-                                      >
-                                        {nestedItem.label}
-                                      </button>
-                                    ))}
-                                  </div>
+                                  <>
+                                    {" "}
+                                    {/* Added a Fragment here */}
+                                    {console.log(
+                                      "Mobile Nested Dropdown Rendered:",
+                                      subItem.label,
+                                      "Items:",
+                                      subItem.items
+                                    )}{" "}
+                                    {/* ADDED LOG */}
+                                    <div className="pl-4 mt-1 space-y-1">
+                                      {/* FIX APPLIED HERE: Check for subItem.items length */}
+                                      {subItem.items &&
+                                      subItem.items.length > 0 ? (
+                                        subItem.items.map((nestedItem) => (
+                                          <button
+                                            key={nestedItem.to}
+                                            onClick={() => {
+                                              setIsOpen(false);
+                                              setOpenMobileMainDropdown(null);
+                                              setOpenMobileNestedDropdown(null);
+                                              setOpenDesktopMainDropdown(null);
+                                              setOpenDesktopNestedDropdown(
+                                                null
+                                              );
+                                              setOpenAccount(false);
+                                              navigate(nestedItem.to);
+                                            }}
+                                            className={`block w-full text-left px-4 py-2 text-white transition duration-200 hover:bg-[#0066cc] ${
+                                              pathname === nestedItem.to
+                                                ? "bg-[#0066cc]"
+                                                : ""
+                                            }`}
+                                          >
+                                            {nestedItem.label}
+                                          </button>
+                                        ))
+                                      ) : (
+                                        <div className="px-4 py-2 text-sm text-white opacity-75 italic">
+                                          No items
+                                        </div>
+                                      )}
+                                    </div>
+                                  </>
                                 )}
                               </div>
                             ) : (
