@@ -150,6 +150,7 @@ import Contact from "./Contact";
 // If 'NC' is your refined NoticesAndCirculars, ensure its internal styling is up to date.
 import NoticesAndCirculars from "./NoticesAndCirculars"; // This is for the main content area
 import ProductsAndAdvertisements from "./ProductsAndAdvertisements";
+// import GroupResearchDetails from "./GroupResearchDetails"; // Assuming this is your product and achievements section
 import OfficeOfDirector from "./OfficeOfDirector";
 import LabHistoryDetails from "./LabHistoryDetails";
 import LabManpowerList from "./LabManpowerList";
@@ -211,7 +212,7 @@ function HomePage() {
         // as the quick view is handled at the top of the HomePage.
         return <NoticesAndCirculars labId={labId} />;
       case "Product & Achievements":
-        return <ProductsAndAdvertisements labId={labId} />;
+        return <ProductsAndAdvertisements  />;
       case "Contact Us":
         return <Contact labId={labId} />;
       default:
