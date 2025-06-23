@@ -3,7 +3,7 @@ import axios from "axios";
 
 const apiUri = import.meta.env.VITE_API_URL;
 
-const DirectorProfile = ({labId}) => {
+const DirectorProfile = ({ labId }) => {
   const [director, setDirector] = useState(null);
   const [about, setAbout] = useState("");
 
@@ -37,7 +37,7 @@ const DirectorProfile = ({labId}) => {
     <div className="max-w-5xl mx-auto p-6">
       {/* Image and Name Side by Side */}
       <div className="flex items-center gap-6 mb-8">
-        {director.photo && (
+        {/* {director.photo && (
           <img
             src={`${apiUri}${director.photo}`}
             alt="Director"
@@ -47,6 +47,16 @@ const DirectorProfile = ({labId}) => {
         {(director.image || director.user?.photo) && (
           <img
             src={`${apiUri}${director.image || director.user.photo}`}
+            alt="Director"
+            className="w-40 h-48 object-cover rounded-lg shadow-md"
+          />
+        )} */}
+
+        {(director.user?.photo || director.image || director.photo) && (
+          <img
+            src={`${apiUri}${
+              director.user?.photo || director.image || director.photo
+            }`}
             alt="Director"
             className="w-40 h-48 object-cover rounded-lg shadow-md"
           />
