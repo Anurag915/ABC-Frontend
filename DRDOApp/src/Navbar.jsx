@@ -245,6 +245,7 @@ export default function Navbar() {
               { label: "All Trial Repositories", to: "/view-trialRepo" },
               { label: "Software Repository Upload", to: "/upload-repo" },
               { label: "Trial Repository Upload", to: "/upload-trialRepo" },
+              { label: "Manage External Links", to: "/admin/external-Links" },
             ].filter(Boolean),
           },
 

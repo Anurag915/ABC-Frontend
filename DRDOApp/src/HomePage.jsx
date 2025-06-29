@@ -156,6 +156,7 @@ import LabHistoryDetails from "./LabHistoryDetails";
 import LabManpowerList from "./LabManpowerList";
 import InfiniteLabPhotos from "./InfiniteLabPhotos"; // Your gallery component
 import NC from "./NC"; // Assuming NC is your improved Notices & Circulars component for the top section
+import ExternalLinksViewer from "./ExternalLinksViewer";
 
 const apiUrl = import.meta.env.VITE_API_URL || "http://localhost:5000";
 
@@ -212,7 +213,7 @@ function HomePage() {
         // as the quick view is handled at the top of the HomePage.
         return <NoticesAndCirculars labId={labId} />;
       case "Product & Achievements":
-        return <ProductsAndAdvertisements  />;
+        return <ProductsAndAdvertisements />;
       case "Contact Us":
         return <Contact labId={labId} />;
       default:
@@ -221,9 +222,9 @@ function HomePage() {
   };
 
   return (
-    <div className="bg-gray-50 font-sans text-black mt-20 px-4 sm:px-6 lg:px-8">
+    <div className="bg-gray-50 font-sans text-black mt-28 px-4 sm:px-6 lg:px-8">
       {/* Top Section: Gallery and Notices/Circulars Quick View */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-10 max-w-screen-xl mx-auto">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-10  mx-auto">
         {/* Gallery Card */}
         <div className="bg-white p-6 rounded-lg shadow-xl border border-gray-100 flex flex-col h-[480px] overflow-hidden">
           <h3 className="text-2xl font-bold text-blue-800 mb-4 border-b-2 border-blue-200 pb-2">
@@ -243,11 +244,25 @@ function HomePage() {
           <h3 className="text-2xl font-bold text-green-800 mb-4 border-b-2 border-green-200 pb-2">
             Latest Notices & Circulars
           </h3>
-          <div className="flex-grow overflow-y-auto pr-2"> {/* Added pr-2 for scrollbar spacing */}
+          <div className="flex-grow overflow-y-auto pr-2">
             {labId ? (
               <NC labId={labId} />
             ) : (
               <p className="text-gray-500 text-lg">Loading notices...</p>
+            )}
+          </div>
+        </div>
+
+        {/* External Links Card */}
+        <div className="bg-white p-6 rounded-lg shadow-xl border border-gray-100 flex flex-col h-[480px] overflow-hidden">
+          <h3 className="text-2xl font-bold text-purple-800 mb-4 border-b-2 border-purple-200 pb-2">
+            Useful External Links
+          </h3>
+          <div className="flex-grow overflow-y-auto pr-2">
+            {labId ? (
+              <ExternalLinksViewer labId={labId} />
+            ) : (
+              <p className="text-gray-500 text-lg">Loading links...</p>
             )}
           </div>
         </div>
@@ -256,7 +271,7 @@ function HomePage() {
       {/* Main Content Area: Sidebar and Dynamic Content */}
       <main className="flex flex-col md:flex-row mx-auto shadow-xl rounded-lg bg-white overflow-hidden  border border-gray-100 mb-10">
         {/* Sidebar */}
-        <aside className="w-full md:w-1/4 bg-blue-50 p-6 space-y-3 border-r border-blue-100 shadow-inner">
+        <aside className="w-full md:w-1/5 bg-blue-50 p-6 space-y-3 border-r border-blue-100 shadow-inner">
           {sections.map((section) => (
             <button
               key={section}
@@ -278,9 +293,7 @@ function HomePage() {
           <h2 className="text-3xl font-extrabold text-blue-700 mb-6 border-b-2 pb-3 border-blue-300">
             {selectedSection}
           </h2>
-          <div className="text-gray-800 leading-relaxed">
-            {renderContent()}
-          </div>
+          <div className="text-gray-800 leading-relaxed">{renderContent()}</div>
         </section>
       </main>
     </div>

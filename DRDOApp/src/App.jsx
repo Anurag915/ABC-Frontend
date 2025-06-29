@@ -35,6 +35,7 @@ import SoftwareRepoUpload from "./SoftwareRepoUpload";
 import TrialRepoUpload from "./TrialRepoUpload";
 import TrialRepoViewer from "./TrialRepoViewer";
 import LabPhotoManager from "./LabPhotoManager";
+import ExternalLinksAdmin from "./ExternalLinksAdmin";
 function App() {
   return (
     <Router>
@@ -159,6 +160,14 @@ function App() {
               element={
                 <RequireAdmin>
                   <ApproveUserCard />
+                </RequireAdmin>
+              }
+            />
+            <Route
+              path="/admin/external-Links"
+              element={
+                <RequireAdmin>
+                  <ExternalLinksAdmin />
                 </RequireAdmin>
               }
             />

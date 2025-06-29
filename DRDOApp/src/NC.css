@@ -1,0 +1,42 @@
+/* src/components/NC.css */
+
+/* Define the keyframes for the continuous scroll */
+@keyframes nc-marquee-scroll {
+  0% {
+    transform: translateY(0%);
+  }
+  100% {
+    transform: translateY(-50%); /* Scrolls up by half the content height */
+  }
+}
+
+.nc-scroll-container {
+  height: 100%; /* Important: This needs to match the height of the parent card */
+  overflow: hidden; /* Hide overflowing content */
+  position: relative; /* For animation positioning */
+}
+
+.nc-scroll-content {
+  display: flex;
+  flex-direction: column;
+  /* Initial position of content for animation */
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+  /* Will be set dynamically by JS: animation-duration: Xms; */
+}
+
+.nc-marquee-animation {
+  animation-name: nc-marquee-scroll;
+}
+
+/* Pause animation on hover for better readability */
+.nc-scroll-container:hover .nc-scroll-content {
+  animation-play-state: paused;
+}
+
+/* Additional styling for individual scroll items, mostly Tailwind based */
+/* These are duplicated from JS for clarity, but primarily handled by Tailwind classes on the li */
+.nc-scroll-item {
+  flex-shrink: 0; /* Prevents items from shrinking */
+  width: 100%; /* Ensures items take full width */
+}

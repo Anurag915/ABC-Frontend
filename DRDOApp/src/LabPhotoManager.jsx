@@ -1,6 +1,15 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { Camera, ImagePlus, Edit, Trash2, Save, X, Loader2, Eye } from "lucide-react"; // Added Eye iconimport toast from "react-hot-toast"; // For sleek notifications
+import {
+  Camera,
+  ImagePlus,
+  Edit,
+  Trash2,
+  Save,
+  X,
+  Loader2,
+  Eye,
+} from "lucide-react"; // Added Eye iconimport toast from "react-hot-toast"; // For sleek notifications
 
 const apiUri = import.meta.env.VITE_API_URL || "http://localhost:5000"; // Ensure default value
 
@@ -102,7 +111,11 @@ const LabPhotoManager = () => {
 
   // Handle Photo Deletion
   const handleDelete = async (photoId) => {
-    if (!window.confirm("Are you sure you want to delete this photo? This action cannot be undone.")) {
+    if (
+      !window.confirm(
+        "Are you sure you want to delete this photo? This action cannot be undone."
+      )
+    ) {
       return;
     }
     try {
@@ -114,7 +127,8 @@ const LabPhotoManager = () => {
     } catch (err) {
       console.error("Delete failed:", err);
       toast.error(
-        err.response?.data?.message || "Photo deletion failed. Please try again."
+        err.response?.data?.message ||
+          "Photo deletion failed. Please try again."
       );
     }
   };
@@ -176,7 +190,10 @@ const LabPhotoManager = () => {
           </h3>
           <form onSubmit={handleUpload} className="space-y-6">
             <div>
-              <label htmlFor="photoName" className="block text-sm font-medium text-gray-700 mb-2">
+              <label
+                htmlFor="photoName"
+                className="block text-sm font-medium text-gray-700 mb-2"
+              >
                 Photo Title
               </label>
               <input
@@ -184,34 +201,46 @@ const LabPhotoManager = () => {
                 type="text"
                 placeholder="e.g., 'Lab Entrance'"
                 value={newPhoto.name}
-                onChange={(e) => setNewPhoto({ ...newPhoto, name: e.target.value })}
+                onChange={(e) =>
+                  setNewPhoto({ ...newPhoto, name: e.target.value })
+                }
                 className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-indigo-500 focus:border-indigo-500 transition duration-150"
                 required
               />
             </div>
             <div>
-              <label htmlFor="photoDescription" className="block text-sm font-medium text-gray-700 mb-2">
+              <label
+                htmlFor="photoDescription"
+                className="block text-sm font-medium text-gray-700 mb-2"
+              >
                 Description
               </label>
               <textarea
                 id="photoDescription"
                 placeholder="Brief description of the photo content."
                 value={newPhoto.description}
-                onChange={(e) => setNewPhoto({ ...newPhoto, description: e.target.value })}
+                onChange={(e) =>
+                  setNewPhoto({ ...newPhoto, description: e.target.value })
+                }
                 rows="3"
                 className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-indigo-500 focus:border-indigo-500 transition duration-150 resize-y"
                 required
               />
             </div>
             <div>
-              <label htmlFor="photoFile" className="block text-sm font-medium text-gray-700 mb-2">
+              <label
+                htmlFor="photoFile"
+                className="block text-sm font-medium text-gray-700 mb-2"
+              >
                 Select Photo File
               </label>
               <input
                 id="photoFile"
                 type="file"
                 accept="image/*"
-                onChange={(e) => setNewPhoto({ ...newPhoto, file: e.target.files[0] })}
+                onChange={(e) =>
+                  setNewPhoto({ ...newPhoto, file: e.target.files[0] })
+                }
                 className="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 focus:outline-none file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100"
                 required
               />
@@ -268,7 +297,8 @@ const LabPhotoManager = () => {
                           className="w-full h-full object-cover"
                           onError={(e) => {
                             e.target.onerror = null; // Prevents infinite loop
-                            e.target.src = "https://via.placeholder.com/400x250?text=Image+Not+Found"; // Placeholder
+                            e.target.src =
+                              "https://via.placeholder.com/400x250?text=Image+Not+Found"; // Placeholder
                           }}
                         />
                         {/* Overlay for actions on hover */}
@@ -301,7 +331,10 @@ const LabPhotoManager = () => {
                           <textarea
                             value={editing.description}
                             onChange={(e) =>
-                              setEditing({ ...editing, description: e.target.value })
+                              setEditing({
+                                ...editing,
+                                description: e.target.value,
+                              })
                             }
                             rows="2"
                             className="w-full text-gray-700 border-b pb-1 focus:outline-none focus:border-indigo-500 resize-y"
